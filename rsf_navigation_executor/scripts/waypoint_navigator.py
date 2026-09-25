@@ -87,7 +87,6 @@ class WaypointNavigator(BasicNavigator):
 
     def __init__(self):
         super().__init__(node_name='waypoint_navigator')
-        # emcl2 は lifecycle ノードではないため waitUntilNav2Active() は呼ばない(デフォルトの amcl/get_state 待ちで無限ループする)
         self.declare_parameter('waypoints_file', '')
 
         self.waypoints = load_waypoints(self.get_parameter('waypoints_file').value)

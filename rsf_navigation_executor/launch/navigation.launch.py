@@ -27,15 +27,39 @@ def generate_launch_description():
     autostart = LaunchConfiguration('autostart')
     use_rviz = LaunchConfiguration('use_rviz')
 
-    localization_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(navigation_executor_dir, 'launch', 'localization.launch.py')
-        ),
-        launch_arguments={
-            'map': map_yaml,
+    pointcloud_to_laserscan_node = Node(
+        package='pointcloud_to_laserscan',
+        executable='pointcloud_to_laserscan_node',
+        name='pointcloud_to_laserscan',
+        parameters=[
+            os.path.join(navigation_executor_dir, 'config', 'pointcloud_to_laserscan_params.yaml'),
+            {'use_sim_time': use_sim_time},
+        ],
+        remappings=[
+            ('cloud_in', '/rsf/hokuyo_cloud2'),
+            ('scan', '/scan'),
+        ],
+        output='screen',
+    )
+
+    map_server_node = Node(
+        package='nav2_map_server',
+        executable='map_server',
+        name='map_server',
+        parameters=[{'yaml_filename': map_yaml, 'use_sim_time': use_sim_time}],
+        output='screen',
+    )
+
+    lifecycle_manager_map_node = Node(
+        package='nav2_lifecycle_manager',
+        executable='lifecycle_manager',
+        name='lifecycle_manager_map',
+        parameters=[{
             'use_sim_time': use_sim_time,
             'autostart': autostart,
-        }.items(),
+            'node_names': ['map_server'],
+        }],
+        output='screen',
     )
 
     # BackUp を外した behavior tree のパスは nav2_params.yaml に $(find-pkg-share ...) で
@@ -69,7 +93,9 @@ def generate_launch_description():
     launch_description.add_action(use_sim_time_arg)
     launch_description.add_action(autostart_arg)
     launch_description.add_action(use_rviz_arg)
-    launch_description.add_action(localization_launch)
+    launch_description.add_action(pointcloud_to_laserscan_node)
+    launch_description.add_action(map_server_node)
+    launch_description.add_action(lifecycle_manager_map_node)
     launch_description.add_action(navigation_launch)
     launch_description.add_action(rviz_node)
 

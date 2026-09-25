@@ -3,7 +3,7 @@
 <package format="3">
   <name>rsf_navigation_executor</name>
   <version>0.0.1</version>
-  <description>Navigation2 and emcl2 localization launch/configuration for the RSF robot</description>
+  <description>Navigation2 launch and configuration for the RSF robot</description>
   <maintainer email="teiruyamashita@icloud.com">kyo0221</maintainer>
   <license>TODO: License declaration</license>
 
@@ -15,7 +15,6 @@
   <exec_depend>nav2_common</exec_depend>
   <exec_depend>nav2_map_server</exec_depend>
   <exec_depend>nav2_lifecycle_manager</exec_depend>
-  <exec_depend>emcl2</exec_depend>
   <exec_depend>pointcloud_to_laserscan</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>nav2_rviz_plugins</exec_depend>
