@@ -13,7 +13,6 @@ log/
 
 # navigation.repos imports
 /navigation2/
-/emcl2_ros2/
 
 # deployment.repos imports
 /icart_driver
