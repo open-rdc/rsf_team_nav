@@ -10,11 +10,15 @@
 build/
 install/
 log/
-/src/
 
 # navigation.repos imports
 /navigation2/
 /emcl2_ros2/
+
+# deployment.repos imports
+/icart_driver
+/yps-pur
+/hokuyo_rsf
 
 # Python
 *.pyc
@@ -29,7 +33,7 @@ capture/
 .codechecker/
 
 # TestCode
-test
+test/
 
 # 設計メモ・作業指示（ローカル参照用、git管理外）
 docs/

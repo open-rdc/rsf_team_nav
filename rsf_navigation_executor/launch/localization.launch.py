@@ -4,9 +4,8 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -14,9 +13,7 @@ def generate_launch_description():
 
     map_arg = DeclareLaunchArgument(
         'map',
-        default_value=PathJoinSubstitution(
-            [FindPackageShare('rsf_navigation_executor'), 'maps', 'tsudanuma2-3.yaml']
-        ),
+        default_value=os.path.join(navigation_executor_dir, 'maps', 'tsudanuma2-3.yaml'),
     )
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')

@@ -305,23 +305,14 @@ Visualization Manager:
       Reliability Policy: Best Effort
       Value: /rsf/rsf_odom
     Value: false
-  - Alpha: 1
-    Arrow Length: 0.6000000238418579
-    Axes Length: 0.30000001192092896
-    Axes Radius: 0.009999999776482582
-    Class: rviz_default_plugins/PoseArray
-    Color: 255; 170; 0
+  - Class: rviz_default_plugins/MarkerArray
     Enabled: true
-    Head Length: 0.07000000029802322
-    Head Radius: 0.029999999329447746
     Name: Waypoints
-    Shaft Length: 0.23000000417232513
-    Shaft Radius: 0.009999999776482582
-    Shape: Arrow (Flat)
+    Namespaces:
+      {}
     Topic:
       Depth: 1
       Durability Policy: Transient Local
-      Filter size: 10
       History Policy: Keep Last
       Reliability Policy: Reliable
       Value: /waypoint_navigator/waypoints

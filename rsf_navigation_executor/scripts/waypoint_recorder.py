@@ -65,7 +65,7 @@ class WaypointRecorder(Node):
         output_file = os.path.abspath(self.get_parameter('output_file').value)
         try:
             with open(output_file, 'w') as f:
-                yaml.safe_dump({'loop': False, 'waypoints': self.waypoints}, f, sort_keys=False)
+                yaml.safe_dump({'waypoints': self.waypoints}, f, sort_keys=False)
         except OSError as error:
             response.success = False
             response.message = f'failed to write {output_file}: {error}'

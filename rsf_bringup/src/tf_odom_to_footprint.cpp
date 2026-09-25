@@ -61,7 +61,7 @@ void TfOdomToFootprint::odometry_callback(
   tf2::Transform base_to_sensor;
   tf2::fromMsg(base_to_sensor_msg.transform, base_to_sensor);
 
-  const tf2::Transform odom_to_base = odom_to_sensor * base_to_sensor.inverse();
+  const tf2::Transform odom_to_base = compute_odom_to_base(odom_to_sensor, base_to_sensor);
 
   geometry_msgs::msg::TransformStamped output;
   output.header.stamp = msg->header.stamp;

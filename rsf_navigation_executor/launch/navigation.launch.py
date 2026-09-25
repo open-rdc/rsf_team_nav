@@ -6,35 +6,17 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
-from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
     navigation_executor_dir = get_package_share_directory('rsf_navigation_executor')
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
 
-    # BackUp を外した behavior tree を絶対パスで指し直す
-    configured_params = RewrittenYaml(
-        source_file=os.path.join(navigation_executor_dir, 'config', 'nav2_params.yaml'),
-        param_rewrites={
-            'default_nav_to_pose_bt_xml': os.path.join(
-                navigation_executor_dir, 'behavior_trees', 'navigate_to_pose_no_backup.xml'
-            ),
-            'default_nav_through_poses_bt_xml': os.path.join(
-                navigation_executor_dir, 'behavior_trees', 'navigate_through_poses_no_backup.xml'
-            ),
-        },
-        convert_types=True,
-    )
-
     map_arg = DeclareLaunchArgument(
         'map',
-        default_value=PathJoinSubstitution(
-            [FindPackageShare('rsf_navigation_executor'), 'maps', 'tsudanuma2-3.yaml']
-        ),
+        default_value=os.path.join(navigation_executor_dir, 'maps', 'tsudanuma2-3.yaml'),
     )
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
@@ -56,6 +38,8 @@ def generate_launch_description():
         }.items(),
     )
 
+    # BackUp を外した behavior tree のパスは nav2_params.yaml に $(find-pkg-share ...) で
+    # 書いてある。nav2_bringup が params を allow_substs 付きで読むのでここでの加工は不要。
     navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
@@ -63,7 +47,7 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'autostart': autostart,
-            'params_file': configured_params,
+            'params_file': os.path.join(navigation_executor_dir, 'config', 'nav2_params.yaml'),
         }.items(),
     )
 

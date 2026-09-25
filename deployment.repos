@@ -3,6 +3,10 @@ repositories:
     type: git
     url: https://github.com/kyo0221/icart_driver.git
     version: main
+  yp-spur:
+    type: git
+    url: https://github.com/openspur/yp-spur.git
+    version: master
   hokuyo_rsf:
     type: git
     url: https://github.com/open-rdc/hokuyo_rsf.git

@@ -9,8 +9,8 @@ bt_navigator:
     wait_for_service_timeout: 1000
     # navigation.launch.py が絶対パスに書き換える。
     # bt_navigator は configure 時に両方を読むので、片方だけ差し替えると起動に失敗する
-    default_nav_to_pose_bt_xml: replace_with_absolute_path
-    default_nav_through_poses_bt_xml: replace_with_absolute_path
+    default_nav_to_pose_bt_xml: $(find-pkg-share rsf_navigation_executor)/behavior_trees/navigate_to_pose_no_backup.xml
+    default_nav_through_poses_bt_xml: $(find-pkg-share rsf_navigation_executor)/behavior_trees/navigate_through_poses_no_backup.xml
     plugin_lib_names:
       - nav2_compute_path_to_pose_action_bt_node
       - nav2_compute_path_through_poses_action_bt_node
@@ -208,9 +208,6 @@ local_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 8.0
           obstacle_min_range: 0.0
-      static_layer:
-        plugin: "nav2_costmap_2d::StaticLayer"
-        map_subscribe_transient_local: True
       always_send_full_costmap: True
 
 global_costmap:
@@ -247,14 +244,6 @@ global_costmap:
         cost_scaling_factor: 3.0
         inflation_radius: 0.55
       always_send_full_costmap: True
-
-map_saver:
-  ros__parameters:
-    use_sim_time: True
-    save_map_timeout: 5.0
-    free_thresh_default: 0.25
-    occupied_thresh_default: 0.65
-    map_subscribe_transient_local: True
 
 planner_server:
   ros__parameters:
@@ -312,10 +301,6 @@ behavior_server:
     min_rotational_vel: 0.4
     rotational_acc_lim: 3.2
 
-robot_state_publisher:
-  ros__parameters:
-    use_sim_time: True
-
 waypoint_follower:
   ros__parameters:
     use_sim_time: True
@@ -325,7 +310,8 @@ waypoint_follower:
     wait_at_waypoint:
       plugin: "nav2_waypoint_follower::WaitAtWaypoint"
       enabled: True
-      waypoint_pause_duration: 200
+      # 0 で WaitAtWaypoint 自体が無効化される。旧実装に per-waypoint 停止は無いため踏襲しない
+      waypoint_pause_duration: 0
 
 velocity_smoother:
   ros__parameters:
