@@ -305,17 +305,18 @@ Visualization Manager:
       Reliability Policy: Best Effort
       Value: /rsf/rsf_odom
     Value: false
-  - Class: rviz_default_plugins/MarkerArray
+  - Class: rviz_default_plugins/InteractiveMarkers
     Enabled: true
     Name: Waypoints
-    Namespaces:
-      {}
-    Topic:
+    Show Axes: false
+    Show Descriptions: true
+    Show Visual Aids: true
+    Update Topic:
       Depth: 1
-      Durability Policy: Transient Local
+      Durability Policy: Volatile
       History Policy: Keep Last
       Reliability Policy: Reliable
-      Value: /waypoint_navigator/waypoints
+      Value: /waypoint_editor/update
     Value: true
   - Class: rviz_common/Group
     Displays:

@@ -20,7 +20,7 @@ def generate_launch_description():
 
     waypoint_navigator_node = Node(
         package='rsf_navigation_executor',
-        executable='waypoint_navigator.py',
+        executable='waypoint_core.py',
         name='waypoint_navigator',
         parameters=[{
             'waypoints_file': LaunchConfiguration('waypoints_file'),

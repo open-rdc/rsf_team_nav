@@ -6,7 +6,6 @@ from launch_ros.descriptions import ParameterValue
 
 
 def generate_launch_description():
-    # install 空間へ書くと再ビルドで消えるため、既定は起動時のカレントディレクトリ
     output_file_arg = DeclareLaunchArgument(
         'output_file',
         default_value='recorded_waypoints.yaml',
