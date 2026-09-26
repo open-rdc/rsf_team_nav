@@ -19,9 +19,10 @@
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>joy</exec_depend>
   <exec_depend>teleop_twist_joy</exec_depend>
-  <exec_depend>icart_driver</exec_depend>
-  <exec_depend>hokuyo_rsf</exec_depend>
+  <exec_depend condition="$RSF_HARDWARE == 'true'">icart_driver</exec_depend>
+  <exec_depend condition="$RSF_HARDWARE == 'true'">hokuyo_rsf</exec_depend>
   <exec_depend>rsf_description</exec_depend>
+  <exec_depend>rsf_simulator</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -21,11 +21,34 @@ def generate_launch_description():
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
     use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
+    map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
+    map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
+    map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
 
     map_yaml = LaunchConfiguration('map')
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     use_rviz = LaunchConfiguration('use_rviz')
+    map_to_odom_x = LaunchConfiguration('map_to_odom_x')
+    map_to_odom_y = LaunchConfiguration('map_to_odom_y')
+    map_to_odom_yaw = LaunchConfiguration('map_to_odom_yaw')
+
+    map_to_odom_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='map_to_odom_broadcaster',
+        arguments=[
+            '--x', map_to_odom_x,
+            '--y', map_to_odom_y,
+            '--z', '0',
+            '--roll', '0',
+            '--pitch', '0',
+            '--yaw', map_to_odom_yaw,
+            '--frame-id', 'map',
+            '--child-frame-id', 'rsf_odom',
+        ],
+        output='screen',
+    )
 
     pointcloud_to_laserscan_node = Node(
         package='pointcloud_to_laserscan',
@@ -93,6 +116,10 @@ def generate_launch_description():
     launch_description.add_action(use_sim_time_arg)
     launch_description.add_action(autostart_arg)
     launch_description.add_action(use_rviz_arg)
+    launch_description.add_action(map_to_odom_x_arg)
+    launch_description.add_action(map_to_odom_y_arg)
+    launch_description.add_action(map_to_odom_yaw_arg)
+    launch_description.add_action(map_to_odom_node)
     launch_description.add_action(pointcloud_to_laserscan_node)
     launch_description.add_action(map_server_node)
     launch_description.add_action(lifecycle_manager_map_node)

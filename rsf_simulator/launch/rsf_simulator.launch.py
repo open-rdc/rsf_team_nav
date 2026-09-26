@@ -19,6 +19,7 @@ def generate_launch_description():
         description='World in rsf_simulator/worlds: tsudanuma2-3 (building editor) '
                     'or tsudanuma (generated from an occupancy grid map by map2sdf)'
     )
+    gz_args_arg = DeclareLaunchArgument('gz_args', default_value='-r -v 4')
 
     world_file = PathJoinSubstitution([
         simulator_dir, 'worlds', [LaunchConfiguration('world'), '.sdf']
@@ -33,7 +34,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
         ]),
-        launch_arguments=[('gz_args', ['-r -v 4 ', world_file])]
+        launch_arguments=[('gz_args', [LaunchConfiguration('gz_args'), ' ', world_file])]
     )
 
     bridge_node = Node(
@@ -56,6 +57,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         world_arg,
+        gz_args_arg,
         set_resource_path,
         gazebo,
         bridge_node,

@@ -3,9 +3,12 @@ import os
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import AnyLaunchDescriptionSource
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition, UnlessCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -18,7 +21,10 @@ def generate_launch_description():
     with open(config_file_path, 'r') as file:
         launch_params = yaml.safe_load(file)['launch']['ros__parameters']
 
-    sim = launch_params['sim']
+    sim_arg = DeclareLaunchArgument('sim', default_value=str(launch_params['sim']).lower())
+    gz_args_arg = DeclareLaunchArgument('gz_args', default_value='-r -v 4')
+    sim = LaunchConfiguration('sim')
+    gz_args = LaunchConfiguration('gz_args')
 
     joy_node = Node(
         package='joy',
@@ -26,6 +32,7 @@ def generate_launch_description():
         name='joy_node',
         parameters=[config_file_path],
         output='screen',
+        condition=UnlessCondition(sim),
     )
     teleop_node = Node(
         package='teleop_twist_joy',
@@ -33,6 +40,7 @@ def generate_launch_description():
         name='teleop_twist_joy_node',
         parameters=[config_file_path],
         output='screen',
+        condition=UnlessCondition(sim),
     )
     tf_odom_to_footprint_node = Node(
         package='rsf_bringup',
@@ -40,34 +48,46 @@ def generate_launch_description():
         name='tf_odom_to_footprint',
         output='screen',
     )
+    simulator_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(
+            get_package_share_directory('rsf_simulator'), 'launch', 'rsf_simulator.launch.py')),
+        launch_arguments={'gz_args': gz_args}.items(),
+        condition=IfCondition(sim),
+    )
     display_launch = IncludeLaunchDescription(
-        AnyLaunchDescriptionSource(os.path.join(
+        PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('rsf_description'), 'launch', 'display.launch.py')),
-        launch_arguments=[('use_sim_time', str(sim).lower())],
+        launch_arguments={'use_sim_time': sim}.items(),
     )
 
     launch_description = LaunchDescription()
-    launch_description.add_action(joy_node)
-    launch_description.add_action(teleop_node)
+    launch_description.add_action(sim_arg)
+    launch_description.add_action(gz_args_arg)
+    launch_description.add_action(simulator_launch)
     launch_description.add_action(display_launch)
     launch_description.add_action(tf_odom_to_footprint_node)
-    if sim is False:
-        icart_launch = IncludeLaunchDescription(
-            AnyLaunchDescriptionSource(os.path.join(
-                get_package_share_directory('icart_driver'), 'launch', 'icart_drive.launch.py'))
-        )
-        hokuyo_rsf_node = Node(
-            package='hokuyo_rsf',
-            executable='hokuyo_rsf',
-            name='hokuyo_rsf',
-            output='screen',
-            parameters=[
-                os.path.join(get_package_share_directory('hokuyo_rsf'), 'config', 'hokuyo_rsf.yaml'),
-                {'param_files_dir': os.path.join(get_package_share_directory('hokuyo_rsf'), 'config')},
-                {'broadcast_tf': False},
-            ],
-        )
-        launch_description.add_action(icart_launch)
-        launch_description.add_action(hokuyo_rsf_node)
+    launch_description.add_action(joy_node)
+    launch_description.add_action(teleop_node)
+    icart_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(PathJoinSubstitution([
+            FindPackageShare('icart_driver'), 'launch', 'icart_drive.launch.py'])),
+        condition=UnlessCondition(sim),
+    )
+    hokuyo_rsf_node = Node(
+        package='hokuyo_rsf',
+        executable='hokuyo_rsf',
+        name='hokuyo_rsf',
+        output='screen',
+        parameters=[
+            PathJoinSubstitution([
+                FindPackageShare('hokuyo_rsf'), 'config', 'hokuyo_rsf.yaml']),
+            {'param_files_dir': PathJoinSubstitution([
+                FindPackageShare('hokuyo_rsf'), 'config'])},
+            {'broadcast_tf': False},
+        ],
+        condition=UnlessCondition(sim),
+    )
+    launch_description.add_action(icart_launch)
+    launch_description.add_action(hokuyo_rsf_node)
 
     return launch_description
