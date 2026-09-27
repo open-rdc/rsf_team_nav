@@ -4,7 +4,7 @@
   本機の LiDAR は水平 FOV が +-105 度で後方 150 度が未計測のため、
   自律的な後退は見えていない方向へ動くことになる。
 -->
-<root main_tree_to_execute="MainTree">
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
     <RecoveryNode number_of_retries="6" name="NavigateRecovery">
       <PipelineSequence name="NavigateWithReplanning">

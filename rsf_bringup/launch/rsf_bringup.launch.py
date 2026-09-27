@@ -30,7 +30,6 @@ def generate_launch_description():
         name='joy_node',
         parameters=[config_file_path],
         output='screen',
-        condition=UnlessCondition(sim),
     )
     teleop_node = Node(
         package='teleop_twist_joy',
@@ -38,7 +37,6 @@ def generate_launch_description():
         name='teleop_twist_joy_node',
         parameters=[config_file_path],
         output='screen',
-        condition=UnlessCondition(sim),
     )
     tf_odom_to_footprint_node = Node(
         package='rsf_bringup',

@@ -13,7 +13,7 @@ def generate_launch_description():
 
     map_arg = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(navigation_executor_dir, 'maps', 'tsudanuma2-3.yaml'),
+        default_value=os.path.join(navigation_executor_dir, 'config', 'tsudanuma2-3.yaml'),
     )
     waypoints_file_arg = DeclareLaunchArgument(
         'waypoints_file',

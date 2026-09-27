@@ -309,19 +309,14 @@ Visualization Manager:
     Value: false
   - Class: rviz_default_plugins/InteractiveMarkers
     Enabled: true
+    Interactive Markers Namespace: /waypoint_editor
     Name: Waypoint Editor
     Show Axes: false
     Show Descriptions: true
     Show Visual Aids: true
-    Update Topic:
-      Depth: 1
-      Durability Policy: Volatile
-      History Policy: Keep Last
-      Reliability Policy: Reliable
-      Value: /waypoint_editor/update
     Value: true
   - Class: rviz_default_plugins/MarkerArray
-    Enabled: true
+    Enabled: false
     Name: Waypoints
     Namespaces: {}
     Topic:
@@ -330,7 +325,7 @@ Visualization Manager:
       History Policy: Keep Last
       Reliability Policy: Reliable
       Value: /waypoint_navigator/waypoints
-    Value: true
+    Value: false
   - Class: rviz_common/Group
     Displays:
     - Alpha: 0.3
@@ -467,6 +462,7 @@ Visualization Manager:
     Frame Rate: 30
   Name: root
   Tools:
+  - Class: rviz_default_plugins/Interact
   - Class: rviz_default_plugins/MoveCamera
   - Class: rviz_default_plugins/Select
   - Class: rviz_default_plugins/FocusCamera

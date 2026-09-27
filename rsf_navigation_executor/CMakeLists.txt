@@ -3,7 +3,7 @@ project(rsf_navigation_executor)
 
 find_package(ament_cmake REQUIRED)
 install(
-  DIRECTORY launch config maps behavior_trees rviz
+  DIRECTORY launch config behavior_trees rviz
   DESTINATION share/${PROJECT_NAME}
 )
 

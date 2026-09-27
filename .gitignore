@@ -15,6 +15,7 @@ log/
 /navigation2/
 /rsf_rviz_plugins
 /rsf_waypoint_manager
+/rsf_slam
 
 # deployment.repos imports
 /icart_driver

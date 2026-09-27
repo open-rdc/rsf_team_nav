@@ -16,7 +16,7 @@ def generate_launch_description():
 
     map_arg = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(navigation_executor_dir, 'maps', 'tsudanuma2-3.yaml'),
+        default_value=os.path.join(navigation_executor_dir, 'config', 'tsudanuma2-3.yaml'),
     )
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
