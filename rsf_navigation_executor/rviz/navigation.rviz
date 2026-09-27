@@ -23,6 +23,8 @@ Panels:
   Splitter Ratio: 0.5
 - Class: nav2_rviz_plugins/Navigation 2
   Name: Navigation 2
+- Class: rsf_rviz_plugins/WaypointNavigation
+  Name: Waypoint Navigation
 Visualization Manager:
   Class: ''
   Displays:
@@ -307,7 +309,7 @@ Visualization Manager:
     Value: false
   - Class: rviz_default_plugins/InteractiveMarkers
     Enabled: true
-    Name: Waypoints
+    Name: Waypoint Editor
     Show Axes: false
     Show Descriptions: true
     Show Visual Aids: true
@@ -317,6 +319,17 @@ Visualization Manager:
       History Policy: Keep Last
       Reliability Policy: Reliable
       Value: /waypoint_editor/update
+    Value: true
+  - Class: rviz_default_plugins/MarkerArray
+    Enabled: true
+    Name: Waypoints
+    Namespaces: {}
+    Topic:
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /waypoint_navigator/waypoints
     Value: true
   - Class: rviz_common/Group
     Displays:

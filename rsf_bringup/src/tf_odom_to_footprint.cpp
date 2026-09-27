@@ -43,8 +43,17 @@ void TfOdomToFootprint::odometry_callback(
     return;
   }
 
-  const auto base_to_sensor_msg = tf_buffer_.lookupTransform(
-    base_frame_, sensor_frame_, tf2::TimePointZero);
+  geometry_msgs::msg::TransformStamped base_to_sensor_msg;
+  try {
+    base_to_sensor_msg = tf_buffer_.lookupTransform(
+      base_frame_, sensor_frame_, tf2::TimePointZero);
+  } catch (const tf2::TransformException & ex) {
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 5000,
+      "Waiting for transform from '%s' to '%s': %s",
+      sensor_frame_.c_str(), base_frame_.c_str(), ex.what());
+    return;
+  }
 
   tf2::Transform odom_to_sensor;
   tf2::fromMsg(msg->pose.pose, odom_to_sensor);

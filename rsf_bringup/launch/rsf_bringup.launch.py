@@ -4,7 +4,7 @@ import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -22,9 +22,7 @@ def generate_launch_description():
         launch_params = yaml.safe_load(file)['launch']['ros__parameters']
 
     sim_arg = DeclareLaunchArgument('sim', default_value=str(launch_params['sim']).lower())
-    gz_args_arg = DeclareLaunchArgument('gz_args', default_value='-r -v 4')
     sim = LaunchConfiguration('sim')
-    gz_args = LaunchConfiguration('gz_args')
 
     joy_node = Node(
         package='joy',
@@ -47,12 +45,7 @@ def generate_launch_description():
         executable='tf_odom_to_footprint',
         name='tf_odom_to_footprint',
         output='screen',
-    )
-    simulator_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(
-            get_package_share_directory('rsf_simulator'), 'launch', 'rsf_simulator.launch.py')),
-        launch_arguments={'gz_args': gz_args}.items(),
-        condition=IfCondition(sim),
+        parameters=[{'use_sim_time': sim}],
     )
     display_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
@@ -62,8 +55,6 @@ def generate_launch_description():
 
     launch_description = LaunchDescription()
     launch_description.add_action(sim_arg)
-    launch_description.add_action(gz_args_arg)
-    launch_description.add_action(simulator_launch)
     launch_description.add_action(display_launch)
     launch_description.add_action(tf_odom_to_footprint_node)
     launch_description.add_action(joy_node)

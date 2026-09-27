@@ -131,7 +131,7 @@
 
     
     <include>
-      <uri>package://rsf_simulator/models/orne_boxF</uri>
+      <uri>model://orne_boxF</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
 

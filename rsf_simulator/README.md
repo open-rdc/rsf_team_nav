@@ -4,23 +4,41 @@ Gazebo (Ignition Fortress / Gazebo Harmonic) 上に RSF ロボットとワール
 
 ## 起動
 
-ナビゲーション用のロボットTFとGazeboをまとめて起動する場合:
+シミュレーションを使ったナビゲーションは、以下の順に起動する。`rsf_simulator` が Gazebo と ROS bridge を起動し、`rsf_bringup` は実機と同じロボット記述・TF を起動する。bringup から Gazebo は起動しない。
 
 ```bash
-ros2 launch rsf_bringup rsf_bringup.launch.py
+ros2 launch rsf_simulator rsf_simulator.launch.py
 ```
 
-次に別端末からNav2を起動し、waypoint実行サービスを呼び出す:
+端末 2 で bringup を起動する:
+
+```bash
+ros2 launch rsf_bringup rsf_bringup.launch.py sim:=true
+```
+
+端末 3 で Nav2 を起動する:
 
 ```bash
 ros2 launch rsf_navigation_executor rsf_navigation.launch.py
+```
+
+waypoint 実行サービスを呼び出す:
+
+```bash
 ros2 service call /waypoint_navigator/start std_srvs/srv/Trigger '{}'
 ```
 
-ヘッドレスで起動する場合は `gz_args:=-s -r -v 2` をbringupに渡す。
-この手順では `rsf_simulator.launch.py` を別途起動しない。
+実機では Gazebo を起動せず、端末 1 で bringup、端末 2 で Nav2 を起動する:
 
-Gazeboだけを個別に起動する場合:
+```bash
+ros2 launch rsf_bringup rsf_bringup.launch.py sim:=false
+```
+
+```bash
+ros2 launch rsf_navigation_executor rsf_navigation.launch.py use_sim_time:=false
+```
+
+Gazebo だけを起動する場合:
 
 ```bash
 ros2 launch rsf_simulator rsf_simulator.launch.py

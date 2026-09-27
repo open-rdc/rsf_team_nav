@@ -13,6 +13,8 @@ log/
 
 # navigation.repos imports
 /navigation2/
+/rsf_rviz_plugins
+/rsf_waypoint_manager
 
 # deployment.repos imports
 /icart_driver

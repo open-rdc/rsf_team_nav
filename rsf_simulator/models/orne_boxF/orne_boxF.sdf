@@ -191,7 +191,7 @@
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>package://rsf_simulator/models/orne_boxF/meshes/RSF-X001.stl</uri>
+            <uri>model://orne_boxF/meshes/RSF-X001.stl</uri>
           </mesh>
         </geometry>
         <material>

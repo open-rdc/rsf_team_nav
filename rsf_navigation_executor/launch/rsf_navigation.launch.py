@@ -18,7 +18,8 @@ def generate_launch_description():
     waypoints_file_arg = DeclareLaunchArgument(
         'waypoints_file',
         default_value=os.path.join(
-            navigation_executor_dir, 'waypoints', 'tsudanuma2-3_wp.yaml'),
+            get_package_share_directory('rsf_waypoint_manager'),
+            'waypoints', 'tsudanuma2-3_wp.yaml'),
     )
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
@@ -53,7 +54,9 @@ def generate_launch_description():
 
     waypoint_navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(navigation_executor_dir, 'launch', 'waypoint_navigation.launch.py')
+            os.path.join(
+                get_package_share_directory('rsf_waypoint_manager'),
+                'launch', 'waypoint_navigation.launch.py')
         ),
         launch_arguments={
             'waypoints_file': waypoints_file,

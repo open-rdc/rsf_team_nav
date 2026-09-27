@@ -25,10 +25,7 @@ def generate_launch_description():
         simulator_dir, 'worlds', [LaunchConfiguration('world'), '.sdf']
     ])
 
-    set_resource_path = AppendEnvironmentVariable(
-        'IGN_GAZEBO_RESOURCE_PATH',
-        os.path.dirname(simulator_dir)
-    )
+    model_path = os.path.join(simulator_dir, 'models')
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
@@ -58,7 +55,8 @@ def generate_launch_description():
     return LaunchDescription([
         world_arg,
         gz_args_arg,
-        set_resource_path,
+        AppendEnvironmentVariable('GZ_SIM_RESOURCE_PATH', model_path),
+        AppendEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', model_path),
         gazebo,
         bridge_node,
     ])

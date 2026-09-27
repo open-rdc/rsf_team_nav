@@ -85,8 +85,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # BackUp を外した behavior tree のパスは nav2_params.yaml に $(find-pkg-share ...) で
-    # 書いてある。nav2_bringup が params を allow_substs 付きで読むのでここでの加工は不要。
     navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')

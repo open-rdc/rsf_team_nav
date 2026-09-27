@@ -3,3 +3,11 @@ repositories:
     type: git
     url: https://github.com/ros-navigation/navigation2.git
     version: jazzy
+  rsf_rviz_plugins:
+    type: git
+    url: https://github.com/kyo0221/rsf_rviz_plugins.git
+    version: jazzy
+  rsf_waypoint_manager:
+    type: git
+    url: https://github.com/kyo0221/rsf_waypoint_manager.git
+    version: jazzy
