@@ -6,8 +6,10 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
+from launch_ros.descriptions import ParameterFile
+from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
@@ -21,6 +23,7 @@ def generate_launch_description():
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
     use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
+    use_composition_arg = DeclareLaunchArgument('use_composition', default_value='false')
     map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
     map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
     map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
@@ -29,6 +32,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     use_rviz = LaunchConfiguration('use_rviz')
+    use_composition = LaunchConfiguration('use_composition')
     map_to_odom_x = LaunchConfiguration('map_to_odom_x')
     map_to_odom_y = LaunchConfiguration('map_to_odom_y')
     map_to_odom_yaw = LaunchConfiguration('map_to_odom_yaw')
@@ -85,6 +89,21 @@ def generate_launch_description():
         output='screen',
     )
 
+    params_file = RewrittenYaml(
+        source_file=os.path.join(navigation_executor_dir, 'config', 'nav2_params.yaml'),
+        param_rewrites={'use_sim_time': use_sim_time},
+        convert_types=True,
+    )
+
+    nav2_container = Node(
+        package='rclcpp_components',
+        executable='component_container_isolated',
+        name='nav2_container',
+        parameters=[ParameterFile(params_file, allow_substs=True)],
+        output='screen',
+        condition=IfCondition(use_composition),
+    )
+
     navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
@@ -92,7 +111,9 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'autostart': autostart,
-            'params_file': os.path.join(navigation_executor_dir, 'config', 'nav2_params.yaml'),
+            'use_composition': PythonExpression(["'", use_composition, "'.lower() == 'true'"]),
+            'container_name': 'nav2_container',
+            'params_file': params_file,
         }.items(),
     )
 
@@ -114,6 +135,7 @@ def generate_launch_description():
     launch_description.add_action(use_sim_time_arg)
     launch_description.add_action(autostart_arg)
     launch_description.add_action(use_rviz_arg)
+    launch_description.add_action(use_composition_arg)
     launch_description.add_action(map_to_odom_x_arg)
     launch_description.add_action(map_to_odom_y_arg)
     launch_description.add_action(map_to_odom_yaw_arg)
@@ -121,6 +143,7 @@ def generate_launch_description():
     launch_description.add_action(pointcloud_to_laserscan_node)
     launch_description.add_action(map_server_node)
     launch_description.add_action(lifecycle_manager_map_node)
+    launch_description.add_action(nav2_container)
     launch_description.add_action(navigation_launch)
     launch_description.add_action(rviz_node)
 
