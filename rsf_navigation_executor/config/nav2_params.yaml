@@ -201,16 +201,16 @@ planner_server:
     use_sim_time: True
     planner_plugins: ["GridBased"]
     GridBased:
-      plugin: "nav2_smac_planner::SmacPlanner2D"
+      plugin: "nav2_smac_planner::SmacPlannerLattice"
       tolerance: 0.125
-      downsample_costmap: false
-      downsampling_factor: 1
       allow_unknown: true
       max_iterations: 1000000
       max_on_approach_iterations: 1000
       max_planning_time: 2.0
-      cost_travel_multiplier: 2.0
-      use_final_approach_orientation: false
+      lattice_filepath: $(find-pkg-share nav2_smac_planner)/sample_primitives/5cm_resolution/0.5m_turning_radius/diff/output.json
+      allow_reverse_expansion: false
+      cache_obstacle_heuristic: false
+      cost_penalty: 2.0
       smoother:
         max_iterations: 1000
         w_smooth: 0.3
