@@ -307,6 +307,17 @@ Visualization Manager:
       Reliability Policy: Best Effort
       Value: /rsf/rsf_odom
     Value: false
+  - Class: rviz_default_plugins/MarkerArray
+    Enabled: true
+    Name: Dummy Pedestrians
+    Namespaces: {}
+    Topic:
+      Depth: 1
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /dummy_pedestrians/markers
+    Value: true
   - Class: rviz_default_plugins/InteractiveMarkers
     Enabled: true
     Interactive Markers Namespace: /waypoint_editor
@@ -485,6 +496,7 @@ Visualization Manager:
       History Policy: Keep Last
       Reliability Policy: Reliable
       Value: /goal_pose
+  - Class: rsf_rviz_plugins/DummyPedestrian
   - Class: rviz_default_plugins/PublishPoint
     Single click: true
     Topic:
