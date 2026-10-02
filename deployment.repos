@@ -2,7 +2,7 @@ repositories:
   icart_driver:
     type: git
     url: https://github.com/kyo0221/icart_driver.git
-    version: main
+    version: jazzy
   yp-spur:
     type: git
     url: https://github.com/openspur/yp-spur.git
@@ -10,7 +10,7 @@ repositories:
   hokuyo_rsf:
     type: git
     url: https://github.com/open-rdc/hokuyo_rsf.git
-    version: release
+    version: jazzy
   nmea_msgs:
     type: git
     url: https://github.com/hokuyo-rd-release/nmea_msgs.git
