@@ -19,8 +19,9 @@ log/
 
 # deployment.repos imports
 /icart_driver
-/yps-pur
+/yp-spur
 /hokuyo_rsf
+/nmea_msgs
 
 # Python
 *.pyc
