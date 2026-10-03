@@ -3,3 +3,7 @@ repositories:
     type: git
     url: https://github.com/kyo0221/rsf_slam.git
     version: jazzy
+  rsf_bag_visualizer:
+    type: git
+    url: https://github.com/kyo0221/rsf_bag_visualizer.git
+    version: jazzy
