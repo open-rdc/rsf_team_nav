@@ -23,6 +23,12 @@ def generate_launch_description():
 
     sim_arg = DeclareLaunchArgument('sim', default_value=str(launch_params['sim']).lower())
     sim = LaunchConfiguration('sim')
+    icart_device_arg = DeclareLaunchArgument(
+        'icart_device',
+        default_value='/dev/serial/by-id/usb-T-frog_project_T-frog_Driver-if00',
+        description='Serial device of the i-Cart mini motor driver',
+    )
+    icart_device = LaunchConfiguration('icart_device')
 
     joy_node = Node(
         package='joy',
@@ -53,6 +59,7 @@ def generate_launch_description():
 
     launch_description = LaunchDescription()
     launch_description.add_action(sim_arg)
+    launch_description.add_action(icart_device_arg)
     launch_description.add_action(display_launch)
     launch_description.add_action(tf_odom_to_footprint_node)
     launch_description.add_action(joy_node)
@@ -60,6 +67,7 @@ def generate_launch_description():
     icart_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(PathJoinSubstitution([
             FindPackageShare('icart_driver'), 'launch', 'icart_drive.launch.py'])),
+        launch_arguments={'device': icart_device}.items(),
         condition=UnlessCondition(sim),
     )
     hokuyo_rsf_node = Node(

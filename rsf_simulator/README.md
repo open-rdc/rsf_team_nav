@@ -46,17 +46,17 @@ ros2 launch rsf_simulator rsf_simulator.launch.py
 
 ## ワールドの選択
 
-| `world` |
-|---|
-| `tsudanuma2-3`（デフォルト）|
-| `tsudanuma` |
+| `world` | 内容 |
+|---|---|
+| `tsudanuma2-3`（デフォルト）| 津田沼キャンパス 2 号館 3 階 |
+| `tsudanuma` | 津田沼キャンパス(地図から生成。重い) |
+| `tsukuba_kakunin` | つくば市役所周辺。実機 bag から勾配と障害物の高さを再現 |
 
 ```bash
 ros2 launch rsf_simulator rsf_simulator.launch.py world:=tsudanuma
 ```
 
 `worlds/` に `<名前>.sdf` を置き、launch の `choices` に名前を追加すれば選択肢を増やせる。
-
 
 ## topic
 

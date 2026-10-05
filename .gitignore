@@ -15,8 +15,12 @@ log/
 /navigation2/
 /rsf_rviz_plugins
 /rsf_waypoint_manager
+/ground_segmentation
+/ground_segmentation_ros2
+/nav2_ground_consistency_costmap_plugin
 /rsf_slam
 /rsf_bag_visualizer
+/rsf_localization_filter
 
 # deployment.repos imports
 /icart_driver

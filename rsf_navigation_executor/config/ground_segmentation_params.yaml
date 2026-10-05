@@ -1,0 +1,23 @@
+ground_segmentation:
+  ros__parameters:
+    robot_frame: base_footprint
+    maxX: 30.0
+    minX: -30.0
+    maxY: 30.0
+    minY: -30.0
+    maxZ: 3.0
+    minZ: -3.0
+    downsample: false
+    downsample_resolution: 0.1
+    lidar_to_ground: -0.35
+    transform_tolerance: 0.1
+    cellSizeX: 1.0
+    cellSizeY: 1.0
+    cellSizeZ: 4.0
+    cellSizeZPhase2: 1.0
+    slopeThresholdDegrees: 20.0
+    groundInlierThreshold: 0.15
+    centroidSearchRadius: 5.0
+    use_imu_orientation: false
+    maxGroundHeightDeviation: 0.1
+    show_benchmark: false

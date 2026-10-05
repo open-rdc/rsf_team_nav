@@ -318,6 +318,17 @@ Visualization Manager:
       Reliability Policy: Reliable
       Value: /dummy_pedestrians/markers
     Value: true
+  - Class: rviz_default_plugins/MarkerArray
+    Enabled: true
+    Name: Dummy Robot Team
+    Namespaces: {}
+    Topic:
+      Depth: 1
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /dummy_robot_team/markers
+    Value: true
   - Class: rviz_default_plugins/InteractiveMarkers
     Enabled: true
     Interactive Markers Namespace: /waypoint_editor
@@ -337,6 +348,12 @@ Visualization Manager:
       Reliability Policy: Reliable
       Value: /waypoint_navigator/waypoints
     Value: false
+  - Class: rsf_rviz_plugins/OdomType
+    Enabled: true
+    Name: Odom Type
+    State Topic: /rsf/rsf_odom_state
+    Type Topic: /rsf/rsf_odom_type
+    Value: true
   - Class: rviz_common/Group
     Displays:
     - Alpha: 0.3
@@ -497,6 +514,7 @@ Visualization Manager:
       Reliability Policy: Reliable
       Value: /goal_pose
   - Class: rsf_rviz_plugins/DummyPedestrian
+  - Class: rsf_rviz_plugins/DummyRobotTeam
   - Class: rviz_default_plugins/PublishPoint
     Single click: true
     Topic:
