@@ -5,21 +5,28 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 
 def generate_launch_description():
     navigation_executor_dir = get_package_share_directory('rsf_navigation_executor')
 
+    world_arg = DeclareLaunchArgument(
+        'world',
+        default_value='tsudanuma2-3',
+        choices=['tsudanuma2-3', 'tsukuba_kakunin'],
+    )
+    world = LaunchConfiguration('world')
     map_arg = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(navigation_executor_dir, 'config', 'tsudanuma2-3.yaml'),
+        default_value=PathJoinSubstitution([
+            navigation_executor_dir, 'config', [world, '.yaml']]),
     )
     waypoints_file_arg = DeclareLaunchArgument(
         'waypoints_file',
-        default_value=os.path.join(
+        default_value=PathJoinSubstitution([
             get_package_share_directory('rsf_waypoint_manager'),
-            'waypoints', 'tsudanuma2-3_wp.yaml'),
+            'waypoints', [world, '_wp.yaml']]),
     )
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
@@ -65,6 +72,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        world_arg,
         map_arg,
         waypoints_file_arg,
         use_sim_time_arg,

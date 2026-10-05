@@ -1,6 +1,6 @@
 launch:
   ros__parameters:
-    sim: false
+    sim: true
 
 joy_node:
   ros__parameters:

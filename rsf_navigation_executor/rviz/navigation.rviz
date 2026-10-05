@@ -513,6 +513,8 @@ Visualization Manager:
       History Policy: Keep Last
       Reliability Policy: Reliable
       Value: /goal_pose
+  - Class: rsf_rviz_plugins/BirdEyeView
+  - Class: rsf_rviz_plugins/ThirdPersonView
   - Class: rsf_rviz_plugins/DummyPedestrian
   - Class: rsf_rviz_plugins/DummyRobotTeam
   - Class: rviz_default_plugins/PublishPoint
