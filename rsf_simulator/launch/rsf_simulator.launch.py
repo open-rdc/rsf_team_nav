@@ -15,10 +15,10 @@ def generate_launch_description():
     world_arg = DeclareLaunchArgument(
         'world',
         default_value='tsudanuma2-3',
-        choices=['tsudanuma2-3', 'tsudanuma', 'tsukuba_kakunin'],
+        choices=['tsudanuma2-3', 'tsudanuma', 'tsukuba'],
         description='World in rsf_simulator/worlds: tsudanuma2-3 (building editor), '
                     'tsudanuma (generated from an occupancy grid map by map2sdf) or '
-                    'tsukuba_kakunin (Tsukuba city hall area with slopes)'
+                    'tsukuba (Tsukuba city hall area with slopes)'
     )
     gz_args_arg = DeclareLaunchArgument('gz_args', default_value='-r -v 4')
 

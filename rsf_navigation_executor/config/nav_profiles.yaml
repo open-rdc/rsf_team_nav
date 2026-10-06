@@ -1,0 +1,27 @@
+profiles:
+  default: {}
+  loose:
+    parameters:
+      /controller_server:
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+      /local_costmap/local_costmap:
+        footprint_padding: 0.05
+  narrow:
+    parameters:
+      /controller_server:
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+      /local_costmap/local_costmap:
+        footprint: '[[-0.16, -0.15], [0.45, -0.15], [0.45, 0.15], [-0.16, 0.15]]'
+        footprint_padding: 0.05
+  narrow_slow:
+    speed_limit: 0.3
+    parameters:
+      /controller_server:
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+      /local_costmap/local_costmap:
+        footprint: '[[-0.16, -0.15], [0.45, -0.15], [0.45, 0.15], [-0.16, 0.15]]'
+        footprint_padding: 0.0
+      /collision_monitor:
+        scan.enabled: false
+  slow:
+    speed_limit: 0.3

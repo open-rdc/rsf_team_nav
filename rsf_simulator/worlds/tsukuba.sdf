@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <sdf version="1.9">
-  <world name="tsukuba_kakunin">
+  <world name="tsukuba">
     
     <gui fullscreen="0">
 
@@ -132,7 +132,7 @@
     </include>
 
     <include>
-      <uri>model://tsukuba_kakunin</uri>
+      <uri>model://tsukuba</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
 

@@ -50,7 +50,7 @@ ros2 launch rsf_simulator rsf_simulator.launch.py
 |---|---|
 | `tsudanuma2-3`（デフォルト）| 津田沼キャンパス 2 号館 3 階 |
 | `tsudanuma` | 津田沼キャンパス(地図から生成。重い) |
-| `tsukuba_kakunin` | つくば市役所周辺。実機 bag から勾配と障害物の高さを再現 |
+| `tsukuba` | つくば市役所周辺。実機 bag から勾配と障害物の高さを再現 |
 
 ```bash
 ros2 launch rsf_simulator rsf_simulator.launch.py world:=tsudanuma

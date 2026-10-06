@@ -13,8 +13,8 @@ def generate_launch_description():
 
     world_arg = DeclareLaunchArgument(
         'world',
-        default_value='tsudanuma2-3',
-        choices=['tsudanuma2-3', 'tsukuba_kakunin'],
+        default_value='tsukuba',
+        choices=['tsudanuma2-3', 'tsukuba'],
     )
     world = LaunchConfiguration('world')
     map_arg = DeclareLaunchArgument(
@@ -27,6 +27,10 @@ def generate_launch_description():
         default_value=PathJoinSubstitution([
             get_package_share_directory('rsf_waypoint_manager'),
             'waypoints', [world, '_wp.yaml']]),
+    )
+    profiles_file_arg = DeclareLaunchArgument(
+        'profiles_file',
+        default_value=os.path.join(navigation_executor_dir, 'config', 'nav_profiles.yaml'),
     )
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
@@ -67,6 +71,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'waypoints_file': waypoints_file,
+            'profiles_file': LaunchConfiguration('profiles_file'),
             'use_sim_time': use_sim_time,
         }.items(),
     )
@@ -75,6 +80,7 @@ def generate_launch_description():
         world_arg,
         map_arg,
         waypoints_file_arg,
+        profiles_file_arg,
         use_sim_time_arg,
         autostart_arg,
         use_rviz_arg,
