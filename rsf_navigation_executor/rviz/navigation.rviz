@@ -354,6 +354,13 @@ Visualization Manager:
     State Topic: /rsf/rsf_odom_state
     Type Topic: /rsf/rsf_odom_type
     Value: true
+  - Behavior Tree Log Topic: /behavior_tree_log
+    Class: rsf_rviz_plugins/NavStatus
+    Enabled: true
+    Name: Nav Status
+    Speed Limit Topic: /speed_limit
+    Value: true
+    Waypoint Status Topic: /waypoint_navigator/status
   - Class: rviz_common/Group
     Displays:
     - Alpha: 0.3
