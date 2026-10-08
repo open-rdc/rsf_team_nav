@@ -160,7 +160,7 @@ local_costmap:
         discretize_costs: true
       pedestrian_layers:
         plugin: "nav2_costmap_2d::PluginContainerLayer"
-        plugins: ["obstacle_layer", "robot_team_layer", "inflation_layer"]
+        plugins: ["obstacle_layer", "robot_team_layer", "static_obstacle_layer", "inflation_layer"]
         obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
           combination_method: 0
@@ -182,6 +182,21 @@ local_costmap:
           observation_sources: robot_team
           robot_team:
             topic: /dummy_robot_team/scan
+            max_obstacle_height: 2.0
+            data_type: "LaserScan"
+            clearing: True
+            marking: True
+            inf_is_valid: True
+            raytrace_max_range: 30.0
+            raytrace_min_range: 0.0
+            obstacle_max_range: 29.0
+            obstacle_min_range: 0.0
+        static_obstacle_layer:
+          plugin: "nav2_costmap_2d::ObstacleLayer"
+          combination_method: 1
+          observation_sources: static_obstacles
+          static_obstacles:
+            topic: /dummy_static_obstacles/scan
             max_obstacle_height: 2.0
             data_type: "LaserScan"
             clearing: True
@@ -344,7 +359,7 @@ collision_monitor:
       simulation_time_step: 0.1
       min_points: 6
       enabled: True
-    observation_sources: [scan, pedestrians, robot_team]
+    observation_sources: [scan, pedestrians, robot_team, static_obstacles]
     scan:
       type: scan
       topic: /scan
@@ -359,6 +374,11 @@ collision_monitor:
     robot_team:
       type: scan
       topic: /dummy_robot_team/scan
+      source_timeout: 0.0
+      enabled: True
+    static_obstacles:
+      type: scan
+      topic: /dummy_static_obstacles/scan
       source_timeout: 0.0
       enabled: True
 

@@ -329,6 +329,17 @@ Visualization Manager:
       Reliability Policy: Reliable
       Value: /dummy_robot_team/markers
     Value: true
+  - Class: rviz_default_plugins/MarkerArray
+    Enabled: true
+    Name: Dummy Static Obstacles
+    Namespaces: {}
+    Topic:
+      Depth: 1
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /dummy_static_obstacles/markers
+    Value: true
   - Class: rviz_default_plugins/InteractiveMarkers
     Enabled: true
     Interactive Markers Namespace: /waypoint_editor
@@ -499,10 +510,6 @@ Visualization Manager:
   Tools:
   - Class: rviz_default_plugins/Interact
   - Class: rviz_default_plugins/MoveCamera
-  - Class: rviz_default_plugins/Select
-  - Class: rviz_default_plugins/FocusCamera
-  - Class: rviz_default_plugins/Measure
-    Line color: 128; 128; 0
   - Class: rviz_default_plugins/SetInitialPose
     Covariance x: 0.25
     Covariance y: 0.25
@@ -524,14 +531,8 @@ Visualization Manager:
   - Class: rsf_rviz_plugins/ThirdPersonView
   - Class: rsf_rviz_plugins/DummyPedestrian
   - Class: rsf_rviz_plugins/DummyRobotTeam
-  - Class: rviz_default_plugins/PublishPoint
-    Single click: true
-    Topic:
-      Depth: 5
-      Durability Policy: Volatile
-      History Policy: Keep Last
-      Reliability Policy: Reliable
-      Value: /clicked_point
+  - Class: rsf_rviz_plugins/DummyStaticObstacle
+  - Class: rsf_rviz_plugins/DummyPause
   Transformation:
     Current:
       Class: rviz_default_plugins/TF
