@@ -4,7 +4,7 @@ profiles:
     parameters:
       /global_costmap/global_costmap:
         pedestrian_layers.enabled: false
-        obstacle_layer.enabled: false
+        pedestrian_layers.obstacle_layer.enabled: false
       /controller_server:
         progress_checker.movement_time_allowance: 180.0
   pillar_area: # 市役所横の柱向けのパラメータ
