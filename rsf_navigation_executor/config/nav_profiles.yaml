@@ -1,27 +1,33 @@
 profiles:
   default: {}
-  loose:
+  following: # 追い越しをしないパラメータ
     parameters:
+      /global_costmap/global_costmap:
+        pedestrian_layers.enabled: false
+        obstacle_layer.enabled: false
       /controller_server:
-        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
-      /local_costmap/local_costmap:
-        footprint_padding: 0.05
-  narrow:
+        progress_checker.movement_time_allowance: 180.0
+  pillar_area: # 市役所横の柱向けのパラメータ
+    speed_limit: 0.5
     parameters:
-      /controller_server:
-        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
-      /local_costmap/local_costmap:
-        footprint: '[[-0.16, -0.15], [0.45, -0.15], [0.45, 0.15], [-0.16, 0.15]]'
-        footprint_padding: 0.05
-  narrow_slow:
-    speed_limit: 0.3
-    parameters:
-      /controller_server:
-        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
       /local_costmap/local_costmap:
         footprint: '[[-0.16, -0.15], [0.45, -0.15], [0.45, 0.15], [-0.16, 0.15]]'
         footprint_padding: 0.0
-      /collision_monitor:
-        scan.enabled: false
-  slow:
-    speed_limit: 0.3
+      /global_costmap/global_costmap:
+        static_layer.enabled: false
+  lio_area: # 低速ならLIOの誤差も小さくなるはず...？
+    speed_limit: 0.5
+  roadside:
+    parameters:
+      /planner_server:
+        GridBased.cost_travel_multiplier: 1.0 # 高コスト領域を避ける強さ default: 2.0
+      /global_costmap/global_costmap:
+        inflation_layer.inflation_radius: 1.0
+        inflation_layer.cost_scaling_factor: 3.0
+      /local_costmap/local_costmap:
+        inflation_layer.inflation_radius: 1.0
+        inflation_layer.cost_scaling_factor: 3.0
+      /controller_server: # global pathへの依存を強くする変更
+        FollowPath.PathAlignCritic.cost_weight: 20.0
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+        FollowPath.CostCritic.cost_weight: 2.0
