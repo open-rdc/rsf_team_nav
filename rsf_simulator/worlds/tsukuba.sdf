@@ -135,6 +135,10 @@
       <uri>model://tsukuba</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
+    <include>
+      <uri>model://tsukuba_walls</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
 
     <gravity>0 0 -9.8000000000000007</gravity>
     <magnetic_field>6.0000000000000002e-06 2.3e-05 -4.1999999999999998e-05</magnetic_field>

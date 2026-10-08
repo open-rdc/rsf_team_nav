@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="tsukuba_walls">
+    <static>true</static>
+    <link name="link">
+      <collision name="walls_collision">
+        <geometry><mesh><uri>model://tsukuba_walls/meshes/walls.obj</uri></mesh></geometry>
+      </collision>
+      <visual name="walls_visual">
+        <geometry><mesh><uri>model://tsukuba_walls/meshes/walls.obj</uri></mesh></geometry>
+        <material><ambient>0.45 0.55 0.65 1</ambient><diffuse>0.45 0.55 0.65 1</diffuse><specular>0.05 0.05 0.05 1</specular></material>
+      </visual>
+      <collision name="ground_0_collision">
+        <pose>-140.000 -125.000 -0.610 0 0 0</pose>
+        <geometry><box><size>340.000 590.000 0.3</size></box></geometry>
+      </collision>
+      <visual name="ground_0_visual">
+        <pose>-140.000 -125.000 -0.610 0 0 0</pose>
+        <geometry><box><size>340.000 590.000 0.3</size></box></geometry>
+        <material><ambient>0.62 0.62 0.60 1</ambient><diffuse>0.62 0.62 0.60 1</diffuse><specular>0.05 0.05 0.05 1</specular></material>
+      </visual>
+      <collision name="ground_1_collision">
+        <pose>146.000 -240.000 -0.610 0 0 0</pose>
+        <geometry><box><size>232.000 360.000 0.3</size></box></geometry>
+      </collision>
+      <visual name="ground_1_visual">
+        <pose>146.000 -240.000 -0.610 0 0 0</pose>
+        <geometry><box><size>232.000 360.000 0.3</size></box></geometry>
+        <material><ambient>0.62 0.62 0.60 1</ambient><diffuse>0.62 0.62 0.60 1</diffuse><specular>0.05 0.05 0.05 1</specular></material>
+      </visual>
+      <collision name="ground_2_collision">
+        <pose>146.000 162.500 -0.610 0 0 0</pose>
+        <geometry><box><size>232.000 15.000 0.3</size></box></geometry>
+      </collision>
+      <visual name="ground_2_visual">
+        <pose>146.000 162.500 -0.610 0 0 0</pose>
+        <geometry><box><size>232.000 15.000 0.3</size></box></geometry>
+        <material><ambient>0.62 0.62 0.60 1</ambient><diffuse>0.62 0.62 0.60 1</diffuse><specular>0.05 0.05 0.05 1</specular></material>
+      </visual>
+      <collision name="ground_3_collision">
+        <pose>258.500 47.500 -0.610 0 0 0</pose>
+        <geometry><box><size>7.000 215.000 0.3</size></box></geometry>
+      </collision>
+      <visual name="ground_3_visual">
+        <pose>258.500 47.500 -0.610 0 0 0</pose>
+        <geometry><box><size>7.000 215.000 0.3</size></box></geometry>
+        <material><ambient>0.62 0.62 0.60 1</ambient><diffuse>0.62 0.62 0.60 1</diffuse><specular>0.05 0.05 0.05 1</specular></material>
+      </visual>
+    </link>
+  </model>
+</sdf>
