@@ -35,6 +35,7 @@ def generate_launch_description():
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
     use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
+    use_composition_arg = DeclareLaunchArgument('use_composition', default_value='true')
     map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
     map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
     map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
@@ -44,6 +45,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     use_rviz = LaunchConfiguration('use_rviz')
+    use_composition = LaunchConfiguration('use_composition')
     map_to_odom_x = LaunchConfiguration('map_to_odom_x')
     map_to_odom_y = LaunchConfiguration('map_to_odom_y')
     map_to_odom_yaw = LaunchConfiguration('map_to_odom_yaw')
@@ -57,6 +59,7 @@ def generate_launch_description():
             'use_sim_time': use_sim_time,
             'autostart': autostart,
             'use_rviz': use_rviz,
+            'use_composition': use_composition,
             'map_to_odom_x': map_to_odom_x,
             'map_to_odom_y': map_to_odom_y,
             'map_to_odom_yaw': map_to_odom_yaw,
@@ -84,6 +87,7 @@ def generate_launch_description():
         use_sim_time_arg,
         autostart_arg,
         use_rviz_arg,
+        use_composition_arg,
         map_to_odom_x_arg,
         map_to_odom_y_arg,
         map_to_odom_yaw_arg,

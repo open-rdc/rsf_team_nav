@@ -6,7 +6,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.descriptions import ParameterFile
 from nav2_common.launch import RewrittenYaml
@@ -14,7 +14,6 @@ from nav2_common.launch import RewrittenYaml
 
 def generate_launch_description():
     navigation_executor_dir = get_package_share_directory('rsf_navigation_executor')
-    nav2_bringup_dir = get_package_share_directory('nav2_bringup')
 
     map_arg = DeclareLaunchArgument(
         'map',
@@ -23,7 +22,7 @@ def generate_launch_description():
     use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
     use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
-    use_composition_arg = DeclareLaunchArgument('use_composition', default_value='false')
+    use_composition_arg = DeclareLaunchArgument('use_composition', default_value='true')
     map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
     map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
     map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
@@ -118,12 +117,12 @@ def generate_launch_description():
 
     navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
+            os.path.join(navigation_executor_dir, 'launch', 'nav2_core.launch.py')
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
             'autostart': autostart,
-            'use_composition': PythonExpression(["'", use_composition, "'.lower() == 'true'"]),
+            'use_composition': use_composition,
             'container_name': 'nav2_container',
             'params_file': params_file,
         }.items(),
