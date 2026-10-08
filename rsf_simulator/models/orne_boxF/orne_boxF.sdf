@@ -204,7 +204,7 @@
 
       <sensor name="rsf_imu" type="imu">
         <topic>/rsf/imu</topic>
-        <update_rate>1000</update_rate>
+        <update_rate>250</update_rate>
         <always_on>1</always_on>
         <visualize>0</visualize>
         <pose>-0.1 0 -0.02 0 -0 0</pose>
@@ -536,7 +536,7 @@
     <plugin name="ignition::gazebo::systems::OdometryPublisher" filename="libignition-gazebo-odometry-publisher-system.so">
       <odom_frame>rsf_odom</odom_frame>
       <robot_base_frame>rsf_hokuyo3d</robot_base_frame>
-      <odom_publish_frequency>100</odom_publish_frequency>
+      <odom_publish_frequency>125</odom_publish_frequency>
       <odom_topic>odom</odom_topic>
       <dimensions>3</dimensions>
       <gaussian_noise>0.0</gaussian_noise>
