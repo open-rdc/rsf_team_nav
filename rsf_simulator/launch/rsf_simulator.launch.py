@@ -21,6 +21,12 @@ def generate_launch_description():
                     'tsukuba (Tsukuba city hall area with slopes)'
     )
     gz_args_arg = DeclareLaunchArgument('gz_args', default_value='-r -v 4')
+    emulator_params_arg = DeclareLaunchArgument(
+        'emulator_params',
+        default_value=os.path.join(simulator_dir, 'config', 'rsf_device_emulator.yaml'),
+        description='Parameters of the node that emulates the RSF-X001 outputs missing in Gazebo '
+                    '(LiDAR-rate LIO odometry, GPGGA fix quality, IMU in device axes)'
+    )
 
     world_file = PathJoinSubstitution([
         simulator_dir, 'worlds', [LaunchConfiguration('world'), '.sdf']
@@ -49,15 +55,27 @@ def generate_launch_description():
         remappings=[
             ('/rsf/hokuyo3d/points', '/rsf/hokuyo_cloud2'),
             ('/odom', '/rsf/rsf_odom'),
+            ('/rsf/imu', '/rsf/sim/imu'),
+            ('/rsf/nav_sat_fix', '/rsf/sim/nav_sat_fix'),
         ],
+        output='screen',
+    )
+
+    emulator_node = Node(
+        package='rsf_simulator',
+        executable='rsf_device_emulator.py',
+        name='rsf_device_emulator',
+        parameters=[LaunchConfiguration('emulator_params')],
         output='screen',
     )
 
     return LaunchDescription([
         world_arg,
         gz_args_arg,
+        emulator_params_arg,
         AppendEnvironmentVariable('GZ_SIM_RESOURCE_PATH', model_path),
         AppendEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', model_path),
         gazebo,
         bridge_node,
+        emulator_node,
     ])

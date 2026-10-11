@@ -49,7 +49,7 @@ def generate_launch_description():
         executable='tf_odom_to_footprint',
         name='tf_odom_to_footprint',
         output='screen',
-        parameters=[{'use_sim_time': sim}],
+        parameters=[{'use_sim_time': sim, 'input_topic': '/rsf/lio_lidar_rate_odom'}],
     )
     display_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(

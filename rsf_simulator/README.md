@@ -66,10 +66,18 @@ ros2 launch rsf_simulator rsf_simulator.launch.py world:=tsudanuma
 |---|---|---|
 | `/clock` | output | シミュレーション時刻 |
 | `/rsf/hokuyo_cloud2` | output | 3D LiDAR の点群|
-| `/rsf/imu` | output | IMU |
-| `/rsf/nav_sat_fix` | output | GNSS |
-| `/rsf/rsf_odom` | output | オドメトリ |
+| `/rsf/rsf_odom` | output | オドメトリ(Gazebo の真値、モデル原点 = 回転中心の姿勢) |
 | `/cmd_vel` | input | 速度指令 |
+
+`rsf_device_emulator`(`scripts/rsf_device_emulator.py`)が、Gazebo に無い RSF-X001 の出力を作る。
+
+| ROS トピック | 内容 |
+|---|---|
+| `/rsf/lio_lidar_rate_odom` | 点群と同じ時刻のセンサ姿勢(`/rsf/rsf_odom` に `base_to_sensor` を足し、ジッタと縮尺誤差を加える) |
+| `/rsf/imu` | 実機の IMU 軸(y 鉛直・z 前方)に回した IMU、ジャイロバイアス付き |
+| `/rsf/nav_sat_fix`、`/rsf/gpgga` | センサ位置から georef の逆変換で作った GNSS。`gnss_gap_zones` の区間は gps_qual 5(Float) |
+
+パラメータは `config/rsf_device_emulator.yaml`(`emulator_params` 引数で差し替え)。誤差を 0、区間を空にすれば真値になる。
 
 トピック名とフレーム名は実機ドライバ `hokuyo_rsf` の設定に揃えてあり、
 実機とシミュレータで下流ノードの設定を変えずに済むようにしてある。
