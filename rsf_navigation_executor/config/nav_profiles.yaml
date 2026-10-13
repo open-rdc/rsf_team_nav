@@ -21,6 +21,7 @@ profiles:
         FollowPath.forward_sampling_distance: 1.5
         FollowPath.PathAlignCritic.cost_weight: 20.0
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+        FollowPath.vx_min: -0.3
       /rsf_localization_filter:
         use_mcl: true
   lio_area: # 低速ならLIOの誤差も小さくなるはず...？
@@ -39,3 +40,22 @@ profiles:
         FollowPath.PathAlignCritic.cost_weight: 20.0
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
         FollowPath.CostCritic.cost_weight: 2.0
+  roadside_following:
+    parameters:
+      /planner_server:
+        GridBased.cost_travel_multiplier: 1.0
+      /global_costmap/global_costmap:
+        pedestrian_layers.enabled: false
+        pedestrian_layers.obstacle_layer.enabled: false
+        inflation_layer.inflation_radius: 1.0
+        inflation_layer.cost_scaling_factor: 3.0
+      /local_costmap/local_costmap:
+        inflation_layer.inflation_radius: 1.0
+        inflation_layer.cost_scaling_factor: 3.0
+      /controller_server:
+        FollowPath.PathAlignCritic.cost_weight: 20.0
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+        FollowPath.CostCritic.cost_weight: 2.0
+        progress_checker.movement_time_allowance: 180.0
+      /queue_guard:
+        enabled: true
