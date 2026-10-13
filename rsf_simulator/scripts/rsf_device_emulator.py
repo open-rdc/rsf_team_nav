@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import math
+import struct
 
 import numpy as np
 import rclpy
@@ -45,7 +46,7 @@ class RsfDeviceEmulator(Node):
         self.create_subscription(Odometry, self.p['odom_in'], self.on_odom, 200)
         self.create_subscription(Imu, self.p['imu_in'], self.on_imu, 500)
         self.create_subscription(NavSatFix, self.p['navsat_in'], self.on_navsat, 10)
-        self.create_subscription(PointCloud2, self.p['cloud_in'], self.on_cloud, 10)
+        self.create_subscription(PointCloud2, self.p['cloud_in'], self.on_cloud, 10, raw=True)
 
     def on_odom(self, msg):
         q = msg.pose.pose.orientation
@@ -54,11 +55,11 @@ class RsfDeviceEmulator(Node):
         msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z = (float(v) for v in sensor)
         self.odom = msg
 
-    def on_cloud(self, msg):
+    def on_cloud(self, raw):
         if self.odom is None:
             return
         out = Odometry()
-        out.header.stamp = msg.header.stamp
+        out.header.stamp.sec, out.header.stamp.nanosec = struct.unpack_from('<iI', raw, 4)
         out.header.frame_id = self.odom.header.frame_id
         out.child_frame_id = self.odom.child_frame_id
         out.pose = self.odom.pose
