@@ -53,11 +53,19 @@ def generate_launch_description():
             '/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
         ],
         remappings=[
+            ('/clock', '/rsf/sim/clock_raw'),
             ('/rsf/hokuyo3d/points', '/rsf/hokuyo_cloud2'),
             ('/odom', '/rsf/rsf_odom'),
             ('/rsf/imu', '/rsf/sim/imu'),
             ('/rsf/nav_sat_fix', '/rsf/sim/nav_sat_fix'),
         ],
+        output='screen',
+    )
+
+    clock_node = Node(
+        package='rsf_simulator',
+        executable='clock_throttle',
+        name='clock_throttle',
         output='screen',
     )
 
@@ -77,5 +85,6 @@ def generate_launch_description():
         AppendEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', model_path),
         gazebo,
         bridge_node,
+        clock_node,
         emulator_node,
     ])
