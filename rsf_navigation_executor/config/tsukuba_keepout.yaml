@@ -1,5 +1,5 @@
 image: tsukuba_keepout.pgm
-mode: trinary
+mode: raw
 resolution: 0.2
 origin:
 - 145.0

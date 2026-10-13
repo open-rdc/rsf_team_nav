@@ -19,6 +19,8 @@ profiles:
         inflation_layer.cost_scaling_factor: 3.0
       /controller_server:
         FollowPath.forward_sampling_distance: 1.5
+        FollowPath.PathAlignCritic.cost_weight: 20.0
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
       /rsf_localization_filter:
         use_mcl: true
   lio_area: # 低速ならLIOの誤差も小さくなるはず...？
