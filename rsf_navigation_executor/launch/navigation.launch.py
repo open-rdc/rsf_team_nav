@@ -7,8 +7,8 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, Opaq
 from launch.conditions import IfCondition, LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch_ros.actions import Node
-from launch_ros.descriptions import ParameterFile
+from launch_ros.actions import ComposableNodeContainer, Node
+from launch_ros.descriptions import ComposableNode, ParameterFile
 from nav2_common.launch import RewrittenYaml
 
 
@@ -79,30 +79,38 @@ def generate_launch_description():
         condition=LaunchConfigurationEquals('localization', 'filter'),
     )
 
-    pointcloud_to_laserscan_node = Node(
-        package='pointcloud_to_laserscan',
-        executable='pointcloud_to_laserscan_node',
-        name='pointcloud_to_laserscan',
-        parameters=[
-            os.path.join(navigation_executor_dir, 'config', 'pointcloud_to_laserscan_params.yaml'),
-            {'use_sim_time': use_sim_time},
+    perception_container = ComposableNodeContainer(
+        name='perception_container',
+        namespace='',
+        package='rclcpp_components',
+        executable='component_container',
+        composable_node_descriptions=[
+            ComposableNode(
+                package='ground_segmentation_ros2',
+                plugin='GroundSegmentatioNode',
+                name='ground_segmentation',
+                parameters=[
+                    os.path.join(navigation_executor_dir, 'config', 'ground_segmentation_params.yaml'),
+                    {'use_sim_time': use_sim_time},
+                ],
+                remappings=[('/ground_segmentation/input_pointcloud', '/rsf/hokuyo_cloud2')],
+                extra_arguments=[{'use_intra_process_comms': True}],
+            ),
+            ComposableNode(
+                package='pointcloud_to_laserscan',
+                plugin='pointcloud_to_laserscan::PointCloudToLaserScanNode',
+                name='pointcloud_to_laserscan',
+                parameters=[
+                    os.path.join(navigation_executor_dir, 'config', 'pointcloud_to_laserscan_params.yaml'),
+                    {'use_sim_time': use_sim_time},
+                ],
+                remappings=[
+                    ('cloud_in', '/ground_segmentation/obstacle_points'),
+                    ('scan', '/scan'),
+                ],
+                extra_arguments=[{'use_intra_process_comms': True}],
+            ),
         ],
-        remappings=[
-            ('cloud_in', '/ground_segmentation/obstacle_points'),
-            ('scan', '/scan'),
-        ],
-        output='screen',
-    )
-
-    ground_segmentation_node = Node(
-        package='ground_segmentation_ros2',
-        executable='ground_segmentation_ros2_node',
-        name='ground_segmentation',
-        parameters=[
-            os.path.join(navigation_executor_dir, 'config', 'ground_segmentation_params.yaml'),
-            {'use_sim_time': use_sim_time},
-        ],
-        remappings=[('/ground_segmentation/input_pointcloud', '/rsf/hokuyo_cloud2')],
         output='screen',
     )
 
@@ -219,8 +227,7 @@ def generate_launch_description():
     launch_description.add_action(map_to_odom_node)
     launch_description.add_action(odom_to_footprint_node)
     launch_description.add_action(localization_filter_launch)
-    launch_description.add_action(ground_segmentation_node)
-    launch_description.add_action(pointcloud_to_laserscan_node)
+    launch_description.add_action(perception_container)
     launch_description.add_action(map_server_node)
     launch_description.add_action(OpaqueFunction(function=map_nodes))
     launch_description.add_action(nav2_container)

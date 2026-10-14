@@ -73,6 +73,7 @@ def generate_launch_description():
             name=name,
             parameters=[configured_params],
             remappings=remappings_for(remap_cmd_vel),
+            extra_arguments=[{'use_intra_process_comms': False}],
         )
         for package, _, plugin, name, remap_cmd_vel in NAV2_SERVERS
     ]
@@ -81,6 +82,7 @@ def generate_launch_description():
         plugin='nav2_lifecycle_manager::LifecycleManager',
         name='lifecycle_manager_navigation',
         parameters=[{'autostart': autostart, 'node_names': lifecycle_nodes}],
+        extra_arguments=[{'use_intra_process_comms': False}],
     ))
 
     return LaunchDescription([
