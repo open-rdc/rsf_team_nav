@@ -7,6 +7,7 @@ profiles:
         pedestrian_layers.obstacle_layer.enabled: false
       /controller_server:
         progress_checker.movement_time_allowance: 180.0
+        failure_tolerance: 5.0
       /queue_guard:
         enabled: true
   pillar_area_mcl: # 市役所横の柱向けのパラメータ
@@ -22,6 +23,7 @@ profiles:
         FollowPath.PathAlignCritic.cost_weight: 20.0
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
         FollowPath.vx_min: -0.3
+        FollowPath.CostCritic.cost_weight: 5.0
       /rsf_localization_filter:
         use_mcl: true
   lio_area: # 低速ならLIOの誤差も小さくなるはず...？
@@ -39,7 +41,6 @@ profiles:
       /controller_server: # global pathへの依存を強くする変更
         FollowPath.PathAlignCritic.cost_weight: 20.0
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
-        FollowPath.CostCritic.cost_weight: 2.0
   roadside_following:
     parameters:
       /planner_server:
@@ -55,7 +56,7 @@ profiles:
       /controller_server:
         FollowPath.PathAlignCritic.cost_weight: 20.0
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
-        FollowPath.CostCritic.cost_weight: 2.0
         progress_checker.movement_time_allowance: 180.0
+        failure_tolerance: 5.0
       /queue_guard:
         enabled: true

@@ -99,7 +99,7 @@ controller_server:
       CostCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
+        cost_weight: 10.0
         near_collision_cost: 253
         critical_cost: 300.0
         consider_footprint: true
@@ -167,7 +167,8 @@ local_costmap:
           observation_sources: pedestrians
           pedestrians:
             topic: /dummy_pedestrians/scan
-            max_obstacle_height: 2.0
+            min_obstacle_height: -10.0
+            max_obstacle_height: 10.0
             data_type: "LaserScan"
             clearing: True
             marking: True
@@ -182,7 +183,8 @@ local_costmap:
           observation_sources: robot_team
           robot_team:
             topic: /dummy_robot_team/scan
-            max_obstacle_height: 2.0
+            min_obstacle_height: -10.0
+            max_obstacle_height: 10.0
             data_type: "LaserScan"
             clearing: True
             marking: True
@@ -197,7 +199,8 @@ local_costmap:
           observation_sources: static_obstacles
           static_obstacles:
             topic: /dummy_static_obstacles/scan
-            max_obstacle_height: 2.0
+            min_obstacle_height: -10.0
+            max_obstacle_height: 10.0
             data_type: "LaserScan"
             clearing: True
             marking: True
@@ -246,7 +249,8 @@ global_costmap:
           observation_sources: pedestrians
           pedestrians:
             topic: /dummy_pedestrians/scan
-            max_obstacle_height: 2.0
+            min_obstacle_height: -10.0
+            max_obstacle_height: 10.0
             data_type: "LaserScan"
             clearing: True
             marking: True
