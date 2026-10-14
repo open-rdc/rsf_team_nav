@@ -10,7 +10,7 @@ profiles:
         failure_tolerance: 5.0
       /queue_guard:
         enabled: true
-  pillar_area_mcl: # 市役所横の柱向けのパラメータ
+  narrow_mcl: # 市役所横の柱向けのパラメータ
     speed_limit: 0.5
     parameters:
       /local_costmap/local_costmap:
@@ -26,9 +26,9 @@ profiles:
         FollowPath.CostCritic.cost_weight: 5.0
       /rsf_localization_filter:
         use_mcl: true
-  lio_area: # 低速ならLIOの誤差も小さくなるはず...？
+  speed_down: # 低速ならLIOの誤差も小さくなるはず...？
     speed_limit: 0.5
-  roadside:
+  road_edge_keep:
     parameters:
       /planner_server:
         GridBased.cost_travel_multiplier: 1.0 # 高コスト領域を避ける強さ default: 2.0
@@ -41,7 +41,7 @@ profiles:
       /controller_server: # global pathへの依存を強くする変更
         FollowPath.PathAlignCritic.cost_weight: 20.0
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
-  roadside_following:
+  road_edge_keep_following:
     parameters:
       /planner_server:
         GridBased.cost_travel_multiplier: 1.0
