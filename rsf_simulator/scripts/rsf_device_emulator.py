@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import math
 import struct
+from collections import deque
 
 import numpy as np
 import rclpy
@@ -37,7 +38,7 @@ class RsfDeviceEmulator(Node):
         z = self.p['gnss_gap_zones']
         self.zones = [z[i:i + 5] for i in range(0, len(z) - 4, 5)]
         self.rng = np.random.default_rng(self.p['seed'])
-        self.odom = None
+        self.odoms = deque(maxlen=400)
         self.origin = None
         self.lio_pub = self.create_publisher(Odometry, self.p['lio_out'], 50)
         self.imu_pub = self.create_publisher(Imu, self.p['imu_out'], 500)
@@ -53,18 +54,26 @@ class RsfDeviceEmulator(Node):
         p = msg.pose.pose.position
         sensor = np.array([p.x, p.y, p.z]) + quat_matrix(q.x, q.y, q.z, q.w) @ self.p['base_to_sensor']
         msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z = (float(v) for v in sensor)
-        self.odom = msg
+        self.odoms.append((msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9, msg))
+
+    def odom_at(self, sec, nanosec):
+        if not self.odoms:
+            return None
+        t = sec + nanosec * 1e-9
+        return min(self.odoms, key=lambda o: abs(o[0] - t))[1]
 
     def on_cloud(self, raw):
-        if self.odom is None:
+        sec, nanosec = struct.unpack_from('<iI', raw, 4)
+        odom = self.odom_at(sec, nanosec)
+        if odom is None:
             return
         out = Odometry()
-        out.header.stamp.sec, out.header.stamp.nanosec = struct.unpack_from('<iI', raw, 4)
-        out.header.frame_id = self.odom.header.frame_id
-        out.child_frame_id = self.odom.child_frame_id
-        out.pose = self.odom.pose
-        out.twist = self.odom.twist
-        p = self.odom.pose.pose.position
+        out.header.stamp.sec, out.header.stamp.nanosec = sec, nanosec
+        out.header.frame_id = odom.header.frame_id
+        out.child_frame_id = odom.child_frame_id
+        out.pose = odom.pose
+        out.twist = odom.twist
+        p = odom.pose.pose.position
         xyz = np.array([p.x, p.y, p.z])
         if self.origin is None:
             self.origin = xyz
@@ -81,10 +90,8 @@ class RsfDeviceEmulator(Node):
         msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z = (float(v) for v in w)
         self.imu_pub.publish(msg)
 
-    def in_gap(self):
-        if self.odom is None:
-            return False
-        p = self.odom.pose.pose.position
+    def in_gap(self, odom):
+        p = odom.pose.pose.position
         for x1, y1, x2, y2, r in self.zones:
             d = np.array([x2 - x1, y2 - y1])
             t = np.clip(np.dot([p.x - x1, p.y - y1], d) / max(d @ d, 1e-9), 0.0, 1.0)
@@ -92,8 +99,8 @@ class RsfDeviceEmulator(Node):
                 return True
         return False
 
-    def latlon(self):
-        p = self.odom.pose.pose.position
+    def latlon(self, odom):
+        p = odom.pose.pose.position
         xy = np.array([p.x, p.y]) + self.rng.normal(0.0, self.p['gnss_noise_m'], 2)
         c, s = math.cos(self.p['map_theta_rad']), math.sin(self.p['map_theta_rad'])
         d = xy - [self.p['map_tx'], self.p['map_ty']]
@@ -103,9 +110,10 @@ class RsfDeviceEmulator(Node):
         return lat, lon
 
     def on_navsat(self, msg):
-        if self.odom is None:
+        odom = self.odom_at(msg.header.stamp.sec, msg.header.stamp.nanosec)
+        if odom is None:
             return
-        lat, lon = self.latlon()
+        lat, lon = self.latlon(odom)
         fix = NavSatFix()
         fix.header = msg.header
         fix.status.status = 0
@@ -118,7 +126,7 @@ class RsfDeviceEmulator(Node):
         g.lat, g.lat_dir = abs(lat), 'N' if lat >= 0 else 'S'
         g.lon, g.lon_dir = abs(lon), 'E' if lon >= 0 else 'W'
         g.alt = msg.altitude
-        g.gps_qual = 5 if self.in_gap() else 4
+        g.gps_qual = 5 if self.in_gap(odom) else 4
         g.num_sats = 20
         g.hdop = 0.8
         self.gga_pub.publish(g)
