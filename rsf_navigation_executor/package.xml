@@ -26,6 +26,7 @@
   <exec_depend>ground_segmentation_ros2</exec_depend>
   <exec_depend>nav2_ground_consistency_costmap_plugin</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>rsf_bringup</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>nav2_rviz_plugins</exec_depend>
   <exec_depend>rsf_rviz_plugins</exec_depend>

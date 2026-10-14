@@ -44,13 +44,6 @@ def generate_launch_description():
         parameters=[config_file_path],
         output='screen',
     )
-    tf_odom_to_footprint_node = Node(
-        package='rsf_bringup',
-        executable='tf_odom_to_footprint',
-        name='tf_odom_to_footprint',
-        output='screen',
-        parameters=[{'use_sim_time': sim, 'input_topic': '/rsf/lio_lidar_rate_odom'}],
-    )
     display_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('rsf_description'), 'launch', 'display.launch.py')),
@@ -61,7 +54,6 @@ def generate_launch_description():
     launch_description.add_action(sim_arg)
     launch_description.add_action(icart_device_arg)
     launch_description.add_action(display_launch)
-    launch_description.add_action(tf_odom_to_footprint_node)
     launch_description.add_action(joy_node)
     launch_description.add_action(teleop_node)
     icart_launch = IncludeLaunchDescription(

@@ -62,6 +62,15 @@ def generate_launch_description():
         condition=LaunchConfigurationEquals('localization', 'static'),
     )
 
+    odom_to_footprint_node = Node(
+        package='rsf_bringup',
+        executable='tf_odom_to_footprint',
+        name='tf_odom_to_footprint',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time, 'input_topic': '/rsf/lio_lidar_rate_odom'}],
+        condition=LaunchConfigurationEquals('localization', 'static'),
+    )
+
     localization_filter_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('rsf_localization_filter'), 'launch', 'filter.launch.py')),
@@ -206,6 +215,7 @@ def generate_launch_description():
     launch_description.add_action(map_to_odom_y_arg)
     launch_description.add_action(map_to_odom_yaw_arg)
     launch_description.add_action(map_to_odom_node)
+    launch_description.add_action(odom_to_footprint_node)
     launch_description.add_action(localization_filter_launch)
     launch_description.add_action(ground_segmentation_node)
     launch_description.add_action(pointcloud_to_laserscan_node)
