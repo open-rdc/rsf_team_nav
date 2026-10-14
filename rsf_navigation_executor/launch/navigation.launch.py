@@ -30,6 +30,7 @@ def generate_launch_description():
         'localization', default_value='filter', choices=['filter', 'static'],
         description='filter: rsf_localization_filter publishes map->rsf_odom (GNSS + gyro dead reckoning, AMCL in GNSS gaps); '
                     'static: fixed map->rsf_odom from map_to_odom_x/y/yaw')
+    use_mcl_stack_arg = DeclareLaunchArgument('use_mcl_stack', default_value='true')
     map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
     map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
     map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
@@ -74,7 +75,7 @@ def generate_launch_description():
     localization_filter_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('rsf_localization_filter'), 'launch', 'filter.launch.py')),
-        launch_arguments={'use_sim_time': use_sim_time}.items(),
+        launch_arguments={'use_sim_time': use_sim_time, 'use_mcl_stack': LaunchConfiguration('use_mcl_stack')}.items(),
         condition=LaunchConfigurationEquals('localization', 'filter'),
     )
 
@@ -211,6 +212,7 @@ def generate_launch_description():
     launch_description.add_action(use_composition_arg)
     launch_description.add_action(keepout_mask_arg)
     launch_description.add_action(localization_arg)
+    launch_description.add_action(use_mcl_stack_arg)
     launch_description.add_action(map_to_odom_x_arg)
     launch_description.add_action(map_to_odom_y_arg)
     launch_description.add_action(map_to_odom_yaw_arg)

@@ -37,6 +37,7 @@ def generate_launch_description():
     use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
     use_composition_arg = DeclareLaunchArgument('use_composition', default_value='true')
     localization_arg = DeclareLaunchArgument('localization', default_value='filter', choices=['filter', 'static'])
+    use_mcl_stack_arg = DeclareLaunchArgument('use_mcl_stack', default_value='true')
     map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
     map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
     map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
@@ -62,6 +63,7 @@ def generate_launch_description():
             'use_rviz': use_rviz,
             'use_composition': use_composition,
             'localization': LaunchConfiguration('localization'),
+            'use_mcl_stack': LaunchConfiguration('use_mcl_stack'),
             'keepout_mask': PathJoinSubstitution([navigation_executor_dir, 'config', [world, '_keepout.yaml']]),
             'map_to_odom_x': map_to_odom_x,
             'map_to_odom_y': map_to_odom_y,
@@ -92,6 +94,7 @@ def generate_launch_description():
         use_rviz_arg,
         use_composition_arg,
         localization_arg,
+        use_mcl_stack_arg,
         map_to_odom_x_arg,
         map_to_odom_y_arg,
         map_to_odom_yaw_arg,
