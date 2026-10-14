@@ -372,6 +372,11 @@ Visualization Manager:
     Speed Limit Topic: /speed_limit
     Value: true
     Waypoint Status Topic: /waypoint_navigator/status
+  - Class: rsf_rviz_plugins/CmdVel
+    Enabled: true
+    Name: Cmd Vel
+    Topic: /cmd_vel
+    Value: true
   - Class: rviz_common/Group
     Displays:
     - Alpha: 0.3
