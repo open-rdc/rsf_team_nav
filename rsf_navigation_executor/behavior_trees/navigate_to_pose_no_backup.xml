@@ -1,15 +1,29 @@
-
 <root BTCPP_format="4" main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
     <RecoveryNode number_of_retries="6" name="NavigateRecovery">
       <PipelineSequence name="NavigateWithReplanning">
         <GoalUpdatedController>
-          <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+          <RecoveryNode number_of_retries="3" name="ComputePath">
+            <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased" error_code_id="{compute_path_error_code}"/>
+            <Fallback>
+              <Sequence name="StartOccupiedWait">
+                <AreErrorCodesPresent error_code="{compute_path_error_code}" error_codes_to_check="205"/>
+                <Wait wait_duration="1.0"/>
+              </Sequence>
+              <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+            </Fallback>
+          </RecoveryNode>
         </GoalUpdatedController>
         <RateController hz="1.0">
-          <RecoveryNode number_of_retries="1" name="ComputePathToPose">
-            <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
-            <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+          <RecoveryNode number_of_retries="3" name="ComputePath">
+            <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased" error_code_id="{compute_path_error_code}"/>
+            <Fallback>
+              <Sequence name="StartOccupiedWait">
+                <AreErrorCodesPresent error_code="{compute_path_error_code}" error_codes_to_check="205"/>
+                <Wait wait_duration="1.0"/>
+              </Sequence>
+              <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+            </Fallback>
           </RecoveryNode>
         </RateController>
         <RecoveryNode number_of_retries="1" name="FollowPath">
@@ -20,16 +34,12 @@
       <ReactiveFallback name="RecoveryFallback">
         <GoalUpdated/>
         <RoundRobin name="RecoveryActions">
-          <Sequence name="ClearingActions">
+          <Wait wait_duration="15.0"/>
+          <Sequence name="ClearAndObserve">
             <ClearEntireCostmap name="ClearLocalCostmap-Subtree" service_name="local_costmap/clear_entirely_local_costmap"/>
             <ClearEntireCostmap name="ClearGlobalCostmap-Subtree" service_name="global_costmap/clear_entirely_global_costmap"/>
+            <Wait wait_duration="2.0"/>
           </Sequence>
-          <Sequence name="TurnAroundAndRetreat">
-            <Spin spin_dist="3.14"/>
-            <DriveOnHeading dist_to_travel="1.0" speed="0.25" time_allowance="10"/>
-          </Sequence>
-          <Spin spin_dist="1.57"/>
-          <Wait wait_duration="5"/>
         </RoundRobin>
       </ReactiveFallback>
     </RecoveryNode>
