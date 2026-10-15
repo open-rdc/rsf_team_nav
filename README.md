@@ -37,3 +37,15 @@ step2
 ```
 colcon build --symlink-install
 ```
+
+#### DDS
+Cyclone DDS を使う。`~/.bashrc` に追記し、切り替えた後は `ros2 daemon stop` を実行する。
+```
+sudo apt install ros-jazzy-rmw-cyclonedds-cpp
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export CYCLONEDDS_URI=file://$HOME/colcon_ws/src/rsf_bringup/config/cyclonedds.xml
+```
+別 PC の RViz などから大きなトピックを受け取る場合は、両方の PC で受信バッファを広げる。
+```
+sudo sysctl -w net.core.rmem_max=2147483647 net.core.rmem_default=8388608
+```
