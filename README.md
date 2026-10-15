@@ -33,6 +33,13 @@ sudo make install
 cd ~/colcon_ws
 ```
 
+rosdep
+```
+cd ~/colcon_ws
+rosdep update
+rosdep install --from-paths src --ignore-src -y
+```
+
 step2
 ```
 colcon build --symlink-install
