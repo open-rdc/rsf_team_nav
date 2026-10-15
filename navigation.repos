@@ -7,6 +7,10 @@ repositories:
     type: git
     url: https://github.com/kyo0221/rsf_rviz_plugins.git
     version: jazzy
+  rsf_localization_filter:
+    type: git
+    url: https://github.com/kyo0221/rsf_localization_filter.git
+    version: jazzy
   rsf_waypoint_manager:
     type: git
     url: https://github.com/kyo0221/rsf_waypoint_manager.git
