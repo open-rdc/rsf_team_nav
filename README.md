@@ -24,7 +24,7 @@ vcs import src < src/deployment.repos
 
 #### ypspur setup
 ```
-cd src/yps-pur
+cd src/yp-spur
 mkdir build
 cd build
 cmake ..
@@ -36,8 +36,9 @@ cd ~/colcon_ws
 rosdep
 ```
 cd ~/colcon_ws
+sudo rosdep init
 rosdep update
-rosdep install --from-paths src --ignore-src -y
+rosdep install --from-paths src --ignore-src -y --skip-keys catkin
 ```
 
 step2
