@@ -11,6 +11,9 @@ build/
 install/
 log/
 
+# docker
+/rsf_docker
+
 # navigation.repos imports
 /navigation2/
 /rsf_rviz_plugins
