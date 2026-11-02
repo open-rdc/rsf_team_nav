@@ -6,9 +6,9 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
-from launch.conditions import IfCondition, LaunchConfigurationEquals, LaunchConfigurationNotEquals
+from launch.conditions import IfCondition, LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import ComposableNodeContainer, Node
 from launch_ros.descriptions import ComposableNode, ParameterFile
 from nav2_common.launch import RewrittenYaml
@@ -29,9 +29,8 @@ def generate_launch_description():
         'keepout_mask', default_value='',
         description='Keepout mask yaml for the global costmap KeepoutFilter (skipped when the file does not exist)')
     localization_arg = DeclareLaunchArgument(
-        'localization', default_value='3d', choices=['filter', 'static', '3d'],
-        description='filter: rsf_localization_filter publishes map->rsf_odom (GNSS + gyro dead reckoning, AMCL in GNSS gaps); '
-                    'static: fixed map->rsf_odom from map_to_odom_x/y/yaw; '
+        'localization', default_value='3d', choices=['static', '3d'],
+        description='static: fixed map->rsf_odom from map_to_odom_x/y/yaw; '
                     '3d: rsf_3d_localization publishes map->rsf_odom from the point cloud map')
     pointcloud_map_arg = DeclareLaunchArgument('pointcloud_map', default_value='')
     georef_file_arg = DeclareLaunchArgument('georef_file', default_value='')
@@ -73,18 +72,6 @@ def generate_launch_description():
         name='tf_odom_to_footprint',
         output='screen',
         parameters=[{'use_sim_time': use_sim_time, 'input_topic': '/rsf/lio_lidar_rate_odom'}],
-        condition=LaunchConfigurationNotEquals('localization', 'filter'),
-    )
-
-    localization_filter_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(
-            get_package_share_directory('rsf_localization_filter'), 'launch', 'filter.launch.py')),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'use_mcl_stack': 'false',
-            'georef_file': LaunchConfiguration('georef_file'),
-        }.items(),
-        condition=LaunchConfigurationEquals('localization', 'filter'),
     )
 
     def localization_3d_nodes(context):
@@ -215,7 +202,7 @@ def generate_launch_description():
         source_file=os.path.join(navigation_executor_dir, 'config', 'nav2_params.yaml'),
         param_rewrites={
             'use_sim_time': use_sim_time,
-            'odom_topic': PythonExpression(["'/rsf_filter/odom' if '", localization, "' == 'filter' else '/rsf/rsf_odom'"]),
+            'odom_topic': '/rsf/rsf_odom',
         },
         convert_types=True,
     )
@@ -270,7 +257,6 @@ def generate_launch_description():
     launch_description.add_action(map_to_odom_yaw_arg)
     launch_description.add_action(map_to_odom_node)
     launch_description.add_action(odom_to_footprint_node)
-    launch_description.add_action(localization_filter_launch)
     launch_description.add_action(OpaqueFunction(function=localization_3d_nodes))
     launch_description.add_action(perception_container)
     launch_description.add_action(map_server_node)

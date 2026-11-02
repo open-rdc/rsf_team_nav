@@ -36,7 +36,7 @@ def generate_launch_description():
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
     use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
     use_composition_arg = DeclareLaunchArgument('use_composition', default_value='true')
-    localization_arg = DeclareLaunchArgument('localization', default_value='3d', choices=['filter', 'static', '3d'])
+    localization_arg = DeclareLaunchArgument('localization', default_value='3d', choices=['static', '3d'])
     map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
     map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
     map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
