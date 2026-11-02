@@ -21,6 +21,7 @@ log/
 /rsf_slam
 /rsf_bag_visualizer
 /rsf_localization_filter
+/rsf_3d_localization
 
 # deployment.repos imports
 /icart_driver
