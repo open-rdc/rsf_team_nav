@@ -23,3 +23,7 @@ repositories:
     type: git
     url: https://github.com/kyo0221/rsf_3d_localization.git
     version: jazzy
+  rsf_simulator:
+    type: git
+    url: https://github.com/kyo0221/rsf_simulator.git
+    version: jazzy
