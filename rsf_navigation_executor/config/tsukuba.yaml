@@ -1,6 +1,6 @@
 image: tsukuba.pgm
-resolution: 0.200000
-origin: [-297.000000, -400.600000, 0.000000]
-negate: 0
+resolution: 0.2
+origin: [-123.59444427490234, -121.57994842529297, 0.0]
 occupied_thresh: 0.65
-free_thresh: 0.196
+free_thresh: 0.2
+negate: 0

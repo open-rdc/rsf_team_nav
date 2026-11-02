@@ -23,3 +23,7 @@ repositories:
     type: git
     url: https://github.com/kyo0221/nav2_ground_consistency_costmap_plugin.git
     version: jazzy
+  rsf_3d_localization:
+    type: git
+    url: https://github.com/kyo0221/rsf_3d_localization.git
+    version: jazzy

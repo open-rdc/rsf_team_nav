@@ -1,10 +1,12 @@
 import os
 
+import yaml
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
-from launch.conditions import IfCondition, LaunchConfigurationEquals
+from launch.conditions import IfCondition, LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import ComposableNodeContainer, Node
@@ -27,10 +29,12 @@ def generate_launch_description():
         'keepout_mask', default_value='',
         description='Keepout mask yaml for the global costmap KeepoutFilter (skipped when the file does not exist)')
     localization_arg = DeclareLaunchArgument(
-        'localization', default_value='filter', choices=['filter', 'static'],
+        'localization', default_value='3d', choices=['filter', 'static', '3d'],
         description='filter: rsf_localization_filter publishes map->rsf_odom (GNSS + gyro dead reckoning, AMCL in GNSS gaps); '
-                    'static: fixed map->rsf_odom from map_to_odom_x/y/yaw')
-    use_mcl_stack_arg = DeclareLaunchArgument('use_mcl_stack', default_value='true')
+                    'static: fixed map->rsf_odom from map_to_odom_x/y/yaw; '
+                    '3d: rsf_3d_localization publishes map->rsf_odom from the point cloud map')
+    pointcloud_map_arg = DeclareLaunchArgument('pointcloud_map', default_value='')
+    georef_file_arg = DeclareLaunchArgument('georef_file', default_value='')
     map_to_odom_x_arg = DeclareLaunchArgument('map_to_odom_x', default_value='0.0')
     map_to_odom_y_arg = DeclareLaunchArgument('map_to_odom_y', default_value='0.0')
     map_to_odom_yaw_arg = DeclareLaunchArgument('map_to_odom_yaw', default_value='0.0')
@@ -69,15 +73,54 @@ def generate_launch_description():
         name='tf_odom_to_footprint',
         output='screen',
         parameters=[{'use_sim_time': use_sim_time, 'input_topic': '/rsf/lio_lidar_rate_odom'}],
-        condition=LaunchConfigurationEquals('localization', 'static'),
+        condition=LaunchConfigurationNotEquals('localization', 'filter'),
     )
 
     localization_filter_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('rsf_localization_filter'), 'launch', 'filter.launch.py')),
-        launch_arguments={'use_sim_time': use_sim_time, 'use_mcl_stack': LaunchConfiguration('use_mcl_stack')}.items(),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'use_mcl_stack': 'false',
+            'georef_file': LaunchConfiguration('georef_file'),
+        }.items(),
         condition=LaunchConfigurationEquals('localization', 'filter'),
     )
+
+    def localization_3d_nodes(context):
+        params = {
+            'use_sim_time': use_sim_time.perform(context) == 'true',
+            'map_path': LaunchConfiguration('pointcloud_map').perform(context),
+            'odom_frame': 'rsf_odom',
+            'publish_tf': localization.perform(context) == '3d',
+        }
+        georef = LaunchConfiguration('georef_file').perform(context)
+        if georef and os.path.exists(georef):
+            with open(georef) as f:
+                origin = yaml.safe_load(f)['map_origin']
+            params.update({
+                'gnss_origin_lat': float(origin['latitude']),
+                'gnss_origin_lon': float(origin['longitude']),
+                'gnss_offset': [0.0, 0.0, -float(origin['altitude'])],
+            })
+        return [Node(
+            package='rsf_3d_localization',
+            executable='rsf_3d_localization_node',
+            name='rsf_3d_localization',
+            parameters=[
+                os.path.join(get_package_share_directory('rsf_3d_localization'), 'config', 'rsf_3d_localization.param.yaml'),
+                params,
+            ],
+            remappings=[
+                ('~/input/pointcloud', '/rsf/hokuyo_cloud2'),
+                ('~/input/imu', '/rsf/imu'),
+                ('~/input/gnss', '/rsf/nav_sat_fix'),
+                ('~/input/initialpose', '/initialpose'),
+                ('~/output/pose_with_covariance', '/rsf_3d_localization/pose_with_covariance'),
+                ('~/output/pointcloud_map', '/rsf_3d_localization/pointcloud_map'),
+            ],
+            output='screen',
+        )]
 
     perception_container = ComposableNodeContainer(
         name='perception_container',
@@ -220,13 +263,15 @@ def generate_launch_description():
     launch_description.add_action(use_composition_arg)
     launch_description.add_action(keepout_mask_arg)
     launch_description.add_action(localization_arg)
-    launch_description.add_action(use_mcl_stack_arg)
+    launch_description.add_action(pointcloud_map_arg)
+    launch_description.add_action(georef_file_arg)
     launch_description.add_action(map_to_odom_x_arg)
     launch_description.add_action(map_to_odom_y_arg)
     launch_description.add_action(map_to_odom_yaw_arg)
     launch_description.add_action(map_to_odom_node)
     launch_description.add_action(odom_to_footprint_node)
     launch_description.add_action(localization_filter_launch)
+    launch_description.add_action(OpaqueFunction(function=localization_3d_nodes))
     launch_description.add_action(perception_container)
     launch_description.add_action(map_server_node)
     launch_description.add_action(OpaqueFunction(function=map_nodes))

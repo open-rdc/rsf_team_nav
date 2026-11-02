@@ -147,8 +147,8 @@ local_costmap:
       plugins: ["ground_consistency", "inflation_layer", "pedestrian_layers"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 1.0
-        inflation_radius: 3.0
+        cost_scaling_factor: 3.0
+        inflation_radius: 1.0
       ground_consistency:
         plugin: "nav2_ground_consistency_costmap_plugin::GroundConsistencyLayer"
         ground_points_topic: /ground_segmentation/ground_points
@@ -238,8 +238,8 @@ global_costmap:
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 1.0
-        inflation_radius: 3.0
+        cost_scaling_factor: 3.0
+        inflation_radius: 1.0
       pedestrian_layers:
         plugin: "nav2_costmap_2d::PluginContainerLayer"
         plugins: ["obstacle_layer", "inflation_layer"]
