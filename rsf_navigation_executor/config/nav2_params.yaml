@@ -59,7 +59,7 @@ controller_server:
       vy_std: 0.2
       wz_std: 0.6
       vx_max: 1.0
-      vx_min: 0.0
+      vx_min: -0.2 # 低速の後退を許可
       vy_max: 0.5
       wz_max: 1.9
       ax_max: 1.0
@@ -331,7 +331,7 @@ velocity_smoother:
     scale_velocities: False
     feedback: "OPEN_LOOP"
     max_velocity: [1.0, 0.0, 1.9]
-    min_velocity: [-0.15, 0.0, -1.9]
+    min_velocity: [-0.2, 0.0, -1.9]
     max_accel: [1.0, 0.0, 3.2]
     max_decel: [-1.5, 0.0, -3.2]
     odom_topic: "/rsf/rsf_odom"

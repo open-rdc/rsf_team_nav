@@ -8,6 +8,7 @@ profiles:
       /controller_server:
         progress_checker.movement_time_allowance: 180.0
         failure_tolerance: 5.0
+        FollowPath.vx_min: 0.0 # 追従待機中に後退しない
       /queue_guard:
         enabled: true
   narrow: # 市役所横の柱向けのパラメータ
@@ -22,6 +23,9 @@ profiles:
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
         FollowPath.vx_min: -0.3
         FollowPath.CostCritic.cost_weight: 5.0
+        progress_checker.movement_time_allowance: 180.0
+      /queue_guard:
+        enabled: true
   speed_down: # 低速ならLIOの誤差も小さくなるはず...？
     speed_limit: 0.5
   road_edge_keep:
@@ -43,5 +47,6 @@ profiles:
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
         progress_checker.movement_time_allowance: 180.0
         failure_tolerance: 5.0
+        FollowPath.vx_min: 0.0 # 追従待機中に後退しない
       /queue_guard:
         enabled: true
