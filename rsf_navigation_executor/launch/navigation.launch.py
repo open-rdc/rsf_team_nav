@@ -102,6 +102,7 @@ def generate_launch_description():
                 ('~/input/pointcloud', '/rsf/hokuyo_cloud2'),
                 ('~/input/imu', '/rsf/imu'),
                 ('~/input/gnss', '/rsf/nav_sat_fix'),
+                ('~/input/wheel_odom', '/icart/odom'),
                 ('~/input/initialpose', '/initialpose'),
                 ('~/output/pose_with_covariance', '/rsf_3d_localization/pose_with_covariance'),
                 ('~/output/pointcloud_map', '/rsf_3d_localization/pointcloud_map'),
