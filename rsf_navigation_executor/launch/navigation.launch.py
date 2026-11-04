@@ -28,6 +28,10 @@ def generate_launch_description():
     keepout_mask_arg = DeclareLaunchArgument(
         'keepout_mask', default_value='',
         description='Keepout mask yaml for the global costmap KeepoutFilter (skipped when the file does not exist)')
+    grass_mask_arg = DeclareLaunchArgument(
+        'grass_mask', default_value='',
+        description='Mask yaml of lawn that the robot must not enter (global and local GrassFilter). '
+                    'Skipped when the file does not exist')
     localization_arg = DeclareLaunchArgument(
         'localization', default_value='3d', choices=['static', '3d'],
         description='static: fixed map->rsf_odom from map_to_odom_x/y/yaw; '
@@ -186,6 +190,37 @@ def generate_launch_description():
                 ),
             ]
             managed += ['keepout_mask_server', 'keepout_filter_info_server']
+        grass = LaunchConfiguration('grass_mask').perform(context)
+        if grass and os.path.exists(grass):
+            # 芝生 (シミュレータや地図では通れるが, 完全に入ると失格): global と local の両方で通行不可にする
+            nodes += [
+                Node(
+                    package='nav2_map_server',
+                    executable='map_server',
+                    name='grass_mask_server',
+                    parameters=[{
+                        'yaml_filename': grass,
+                        'topic_name': '/grass_filter_mask',
+                        'use_sim_time': use_sim_time,
+                    }],
+                    output='screen',
+                ),
+                Node(
+                    package='nav2_map_server',
+                    executable='costmap_filter_info_server',
+                    name='grass_filter_info_server',
+                    parameters=[{
+                        'type': 0,
+                        'filter_info_topic': '/grass_filter_info',
+                        'mask_topic': '/grass_filter_mask',
+                        'base': 0.0,
+                        'multiplier': 1.0,
+                        'use_sim_time': use_sim_time,
+                    }],
+                    output='screen',
+                ),
+            ]
+            managed += ['grass_mask_server', 'grass_filter_info_server']
         nodes.append(Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
@@ -250,6 +285,7 @@ def generate_launch_description():
     launch_description.add_action(use_rviz_arg)
     launch_description.add_action(use_composition_arg)
     launch_description.add_action(keepout_mask_arg)
+    launch_description.add_action(grass_mask_arg)
     launch_description.add_action(localization_arg)
     launch_description.add_action(pointcloud_map_arg)
     launch_description.add_action(georef_file_arg)

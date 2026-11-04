@@ -63,6 +63,7 @@ def generate_launch_description():
             'use_composition': use_composition,
             'localization': LaunchConfiguration('localization'),
             'keepout_mask': PathJoinSubstitution([navigation_executor_dir, 'config', [world, '_keepout.yaml']]),
+            'grass_mask': PathJoinSubstitution([navigation_executor_dir, 'config', [world, '_grass.yaml']]),
             'pointcloud_map': PathJoinSubstitution([navigation_executor_dir, 'config', [world, '.pcd']]),
             'georef_file': PathJoinSubstitution([navigation_executor_dir, 'config', [world, '_georef.yaml']]),
             'map_to_odom_x': map_to_odom_x,

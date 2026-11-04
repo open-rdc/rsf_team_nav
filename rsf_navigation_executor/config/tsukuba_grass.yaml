@@ -1,0 +1,9 @@
+# 芝生 (シミュレータ・地図では通れるが, 完全に入ると失格). 確認走行区間 WP0-30 の経路から 0.9-8m の芝生を通行不可 (100)
+# 点群地図 tsukuba.pcd の地面反射強度 (芝生は強い) から生成. 経路の ±0.9m は通路として常に空ける
+image: tsukuba_grass.pgm
+mode: raw
+resolution: 0.2
+origin: [-80.0, -10.0, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
