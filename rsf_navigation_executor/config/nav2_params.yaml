@@ -94,7 +94,7 @@ controller_server:
       PreferForwardCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
+        cost_weight: 15.0 # 物体の脇で後退のまま長く進み, 向きを戻せず止まるのを防ぐ
         threshold_to_consider: 0.5
       CostCritic:
         enabled: true
@@ -228,11 +228,11 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_footprint
       use_sim_time: True
-      footprint_padding: 0.05
+      footprint_padding: 0.15 # local と同じ. 異なると local で通れない隙間に global path を引いて止まる
       footprint: "[[-0.16, -0.26], [0.45, -0.26], [0.45, 0.26], [-0.16, 0.26]]"
       resolution: 0.05
       track_unknown_space: true
-      plugins: ["static_layer", "inflation_layer", "pedestrian_layers"]
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer", "pedestrian_layers"]
       filters: ["keepout_filter", "grass_filter"]
       grass_filter: # 芝生 (シミュレータでは平坦だが完全に入ると失格). 経路沿いの芝生を keepout にする
         plugin: "nav2_costmap_2d::KeepoutFilter"
@@ -247,6 +247,22 @@ global_costmap:
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
+      obstacle_layer: # /scan に写った物体 (種類は問わない) で経路そのものを避けさせる. 後ろで待つべき following/narrow 系では無効化
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan
+        scan: # 何も無い方向も inf で光線が出る 2D スキャンを使う (点群だと開けた場所の印が消えず溜まり, 遠回りの経路になる)
+          topic: /scan
+          data_type: "LaserScan"
+          inf_is_valid: True
+          min_obstacle_height: -100.0
+          max_obstacle_height: 100.0
+          marking: True
+          clearing: True
+          raytrace_max_range: 12.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 10.0
+          obstacle_min_range: 0.0
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0

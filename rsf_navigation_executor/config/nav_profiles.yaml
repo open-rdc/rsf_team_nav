@@ -1,8 +1,15 @@
 profiles:
   default: {}
+  wide_road: # 市役所から外へ向かう広い道 (S1). 遅いロボットにはついていかず, global の障害物層で経路ごと避けて追い越す
+    parameters:
+      /yield_guard:
+        follow_enabled: false
+      /global_costmap/global_costmap:
+        obstacle_layer.enabled: true # 追従で切った層が残っていても必ず戻す
   following: # 追い越しをしないパラメータ
     parameters:
       /global_costmap/global_costmap:
+        obstacle_layer.enabled: false
         pedestrian_layers.enabled: false
         pedestrian_layers.obstacle_layer.enabled: false
       /controller_server:
@@ -13,6 +20,8 @@ profiles:
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
       /queue_guard:
         enabled: true
+      /yield_guard:
+        follow_enabled: false
   narrow: # 市役所横の柱向けのパラメータ
     parameters:
       /local_costmap/local_costmap:
@@ -28,8 +37,28 @@ profiles:
         progress_checker.movement_time_allowance: 180.0
       /queue_guard:
         enabled: true
+      /yield_guard:
+        follow_enabled: false
+      /global_costmap/global_costmap:
+        obstacle_layer.enabled: false
+        footprint_padding: 0.0
   speed_down: # 低速ならLIOの誤差も小さくなるはず...？
     speed_limit: 0.5
+  speed_down_following: # 確認走行区間の横断歩道前の待機列 (speed_down + following)
+    speed_limit: 0.5
+    parameters:
+      /global_costmap/global_costmap:
+        obstacle_layer.enabled: false
+        pedestrian_layers.enabled: false
+        pedestrian_layers.obstacle_layer.enabled: false
+      /controller_server:
+        progress_checker.movement_time_allowance: 180.0
+        failure_tolerance: 5.0
+        FollowPath.vx_min: 0.0
+      /queue_guard:
+        enabled: true
+      /yield_guard:
+        follow_enabled: false
   road_edge_keep:
     parameters:
       /planner_server:
@@ -37,11 +66,28 @@ profiles:
       /controller_server: # global pathへの依存を強くする変更
         FollowPath.PathAlignCritic.cost_weight: 20.0
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+      /yield_guard:
+        enabled: true
+      /global_costmap/global_costmap:
+        footprint_padding: 0.25 # global は local (0.15) より慎重に: 植え込みと物体の狭い隙間に経路を引かない
+  road_edge_keep_poles: # S3 のポール列 (WP100-112). ポールの間 (約1.3m) を通すため余裕を 0.22 に下げる. 0.25 だと歩行者側を回る
+    parameters:
+      /planner_server:
+        GridBased.cost_travel_multiplier: 1.0
+      /controller_server:
+        FollowPath.PathAlignCritic.cost_weight: 20.0
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+      /yield_guard:
+        enabled: true
+      /global_costmap/global_costmap:
+        footprint_padding: 0.22
   road_edge_keep_following:
     parameters:
       /planner_server:
         GridBased.cost_travel_multiplier: 1.0
       /global_costmap/global_costmap:
+        footprint_padding: 0.25 # global は local (0.15) より慎重に: 植え込みと物体の狭い隙間に経路を引かない
+        obstacle_layer.enabled: false
         pedestrian_layers.enabled: false
         pedestrian_layers.obstacle_layer.enabled: false
       /controller_server:
@@ -52,3 +98,5 @@ profiles:
         FollowPath.vx_min: 0.0 # 追従待機中に後退しない
       /queue_guard:
         enabled: true
+      /yield_guard:
+        follow_enabled: false

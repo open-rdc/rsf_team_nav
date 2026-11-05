@@ -3,7 +3,7 @@ pointcloud_to_laserscan:
     target_frame: "rsf_hokuyo3d"
     transform_tolerance: 0.1
     min_height: -0.3
-    max_height: 0.3
+    max_height: 0.75 # ロボットの上端 (地面から約1.05m) まで: 張り出した枝葉を global にも載せる
     angle_min: -3.14159
     angle_max: 3.14159
     angle_increment: 0.0058

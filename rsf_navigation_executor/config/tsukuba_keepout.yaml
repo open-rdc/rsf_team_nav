@@ -2,8 +2,8 @@ image: tsukuba_keepout.pgm
 mode: raw
 resolution: 0.2
 origin:
-- -38.4
-- 67.2
+- -27.3944
+- -65.1799
 - 0.0
 negate: 0
 occupied_thresh: 0.65

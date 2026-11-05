@@ -5,7 +5,7 @@ ground_segmentation:
     minX: -30.0
     maxY: 30.0
     minY: -30.0
-    maxZ: 3.0
+    maxZ: 1.1
     minZ: -3.0
     downsample: false
     downsample_resolution: 0.1
