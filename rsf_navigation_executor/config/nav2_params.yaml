@@ -347,7 +347,7 @@ velocity_smoother:
     max_decel: [-1.5, 0.0, -3.2]
     odom_topic: "/rsf/rsf_odom"
     odom_duration: 0.1
-    deadband_velocity: [0.0, 0.0, 0.0]
+    deadband_velocity: [0.03, 0.0, 0.0] # 待機中に MPPI が出し続ける数 mm/s の前進で障害物へにじり寄らないよう 0 にする
     velocity_timeout: 1.0
 
 collision_monitor:
