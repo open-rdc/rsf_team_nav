@@ -100,3 +100,11 @@ profiles:
         enabled: true
       /yield_guard:
         follow_enabled: false
+  signal_queue: # 信号の停止点へ向かう最後の区間 (停止点の手前 5m 以内) に自動で重ねる: 待機列を回り込んで追い越さず後ろで止まる
+    parameters:
+      /global_costmap/global_costmap:
+        obstacle_layer.enabled: false
+      /queue_guard:
+        enabled: true
+      /yield_guard:
+        follow_enabled: false
