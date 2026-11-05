@@ -1,0 +1,10 @@
+# local costmap 用の芝生マスク. tsukuba_grass.pgm (100 = 芝生) を 254 (衝突) ではなく 約 249 (非常に高いコスト) として読む
+# 254 だと padding 込みの足跡が芝生の縁に触れただけで MPPI の全軌道が衝突扱いになり, そこから動けなくなる
+# (scale + negate: 画素 100 -> 100/255 = 0.392 -> 0.392 / occupied_thresh * 100 = 97 -> cost 249. 芝生の手前の帯 (最大 50) は 48 以下. 画素 0 -> 0)
+image: tsukuba_grass.pgm
+mode: scale
+resolution: 0.2
+origin: [-80.0, -10.0, 0.0]
+negate: 1
+occupied_thresh: 0.405
+free_thresh: 0.0

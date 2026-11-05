@@ -221,6 +221,37 @@ def generate_launch_description():
                 ),
             ]
             managed += ['grass_mask_server', 'grass_filter_info_server']
+            soft = grass.replace('.yaml', '_soft.yaml')
+            if os.path.exists(soft):
+                # local 用: 芝生を衝突ではなく非常に高いコストにする (足跡の縁が触れただけで MPPI が動けなくなるのを防ぐ)
+                nodes += [
+                    Node(
+                        package='nav2_map_server',
+                        executable='map_server',
+                        name='grass_soft_mask_server',
+                        parameters=[{
+                            'yaml_filename': soft,
+                            'topic_name': '/grass_soft_filter_mask',
+                            'use_sim_time': use_sim_time,
+                        }],
+                        output='screen',
+                    ),
+                    Node(
+                        package='nav2_map_server',
+                        executable='costmap_filter_info_server',
+                        name='grass_soft_filter_info_server',
+                        parameters=[{
+                            'type': 0,
+                            'filter_info_topic': '/grass_soft_filter_info',
+                            'mask_topic': '/grass_soft_filter_mask',
+                            'base': 0.0,
+                            'multiplier': 1.0,
+                            'use_sim_time': use_sim_time,
+                        }],
+                        output='screen',
+                    ),
+                ]
+                managed += ['grass_soft_mask_server', 'grass_soft_filter_info_server']
         nodes.append(Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',

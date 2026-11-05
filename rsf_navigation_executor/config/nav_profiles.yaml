@@ -9,6 +9,8 @@ profiles:
         progress_checker.movement_time_allowance: 180.0
         failure_tolerance: 5.0
         FollowPath.vx_min: 0.0 # 追従待機中に後退しない
+        FollowPath.PathAlignCritic.cost_weight: 20.0 # 前走で経路がふさがっていても経路に沿わせる. 横へずれて芝生の keepout に触れると動けなくなる
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
       /queue_guard:
         enabled: true
   narrow: # 市役所横の柱向けのパラメータ
