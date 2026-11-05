@@ -37,6 +37,7 @@ profiles:
         progress_checker.movement_time_allowance: 180.0
       /queue_guard:
         enabled: true
+        half_width: 0.7 # 経路の左右これ以内の物体だけ待機列とみなす. 1.5 だと通路の端に止まったロボット (柱との隙間 約1.65m) の手前で止まり続ける
       /yield_guard:
         follow_enabled: false
       /global_costmap/global_costmap:
