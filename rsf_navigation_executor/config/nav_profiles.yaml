@@ -106,6 +106,6 @@ profiles:
       /queue_guard:
         enabled: true
         use_route: true
-        min_object_size: 0.42 # コーン (直径 0.36m) を待機列のロボットとみなして止まらない
+        min_object_size: 0.48 # コーン (直径 0.36m, 格子で約 0.45m) を待機列とみなさない. 人 (0.5m) とロボットは残す
       /yield_guard:
         follow_enabled: false
