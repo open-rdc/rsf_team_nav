@@ -107,5 +107,6 @@ profiles:
         obstacle_layer.enabled: false
       /queue_guard:
         enabled: true
+        min_object_size: 0.42 # コーン (直径 0.36m) を待機列のロボットとみなして止まらない
       /yield_guard:
         follow_enabled: false
