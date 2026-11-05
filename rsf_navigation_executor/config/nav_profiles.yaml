@@ -101,12 +101,11 @@ profiles:
         enabled: true
       /yield_guard:
         follow_enabled: false
-  signal_queue: # 信号の停止点そのものへ向かう最後の区間に自動で重ねる: 待機列を回り込んで追い越さず後ろで止まる
+  signal_queue: # 信号の停止点そのものへ向かう最後の区間に自動で重ねる: waypoint の線上の待機列の後ろで止まる (経路は物体を避けたまま)
     parameters:
-      /global_costmap/global_costmap:
-        obstacle_layer.enabled: false
       /queue_guard:
         enabled: true
+        use_route: true
         min_object_size: 0.42 # コーン (直径 0.36m) を待機列のロボットとみなして止まらない
       /yield_guard:
         follow_enabled: false
