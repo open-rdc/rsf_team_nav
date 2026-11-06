@@ -32,7 +32,7 @@ def generate_launch_description():
         'profiles_file',
         default_value=os.path.join(navigation_executor_dir, 'config', 'nav_profiles.yaml'),
     )
-    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
+    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='false')
     autostart_arg = DeclareLaunchArgument('autostart', default_value='true')
     use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
     use_composition_arg = DeclareLaunchArgument('use_composition', default_value='true')
