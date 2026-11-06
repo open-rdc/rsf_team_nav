@@ -252,6 +252,25 @@ def generate_launch_description():
                     ),
                 ]
                 managed += ['grass_soft_mask_server', 'grass_soft_filter_info_server']
+        # 朱色路側帯の走行禁止領域: マスクは rsf_waypoint_manager の keepout_zone_mask が出す (map_server は不要)
+        for name, info, mask in (('roadside_filter_info_server', '/roadside_filter_info', '/roadside_filter_mask'),
+                                 ('roadside_soft_filter_info_server', '/roadside_soft_filter_info',
+                                  '/roadside_soft_filter_mask')):
+            nodes.append(Node(
+                package='nav2_map_server',
+                executable='costmap_filter_info_server',
+                name=name,
+                parameters=[{
+                    'type': 0,
+                    'filter_info_topic': info,
+                    'mask_topic': mask,
+                    'base': 0.0,
+                    'multiplier': 1.0,
+                    'use_sim_time': use_sim_time,
+                }],
+                output='screen',
+            ))
+            managed.append(name)
         nodes.append(Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',

@@ -145,7 +145,11 @@ local_costmap:
       footprint_padding: 0.15
       footprint: "[[-0.16, -0.26], [0.45, -0.26], [0.45, 0.26], [-0.16, 0.26]]"
       plugins: ["ground_consistency", "inflation_layer", "pedestrian_layers"]
-      filters: ["grass_filter"]
+      filters: ["grass_filter", "roadside_filter"]
+      roadside_filter: # 朱色路側帯の車道側 (はみ出すと失格). 芝生と同じく 254 ではなくソフト版 (約 249) で入れ, 足跡の縁が触れただけで動けなくなるのを防ぐ
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: True
+        filter_info_topic: "/roadside_soft_filter_info" # KeepoutFilter の lethal_override_cost は自己位置が禁止領域内の時だけ効くので, 値を下げたマスクを別に出す
       grass_filter: # 芝生 (完全に入ると失格). global と同じ範囲を非常に高いコスト (約 249, 衝突ではない) で入れ, MPPI の回避でも芝生へ出させない
         plugin: "nav2_costmap_2d::KeepoutFilter"
         enabled: True
@@ -233,7 +237,13 @@ global_costmap:
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer", "pedestrian_layers"]
-      filters: ["keepout_filter", "grass_filter"]
+      filters: ["keepout_filter", "grass_filter", "roadside_filter"]
+      roadside_filter: # 朱色路側帯の車道側 (はみ出すと失格). 自己位置のずれで中に入っても抜け出せるよう致死コストを下げる
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: True
+        filter_info_topic: "/roadside_filter_info"
+        override_lethal_cost: True
+        lethal_override_cost: 252
       grass_filter: # 芝生 (シミュレータでは平坦だが完全に入ると失格). 経路沿いの芝生を keepout にする
         plugin: "nav2_costmap_2d::KeepoutFilter"
         enabled: True
