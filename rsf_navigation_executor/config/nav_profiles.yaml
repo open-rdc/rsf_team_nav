@@ -20,6 +20,8 @@ profiles:
         FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
       /queue_guard:
         enabled: true
+        min_object_size: 0.48 # 歩道のコーン列 (costmap で約 0.45m) を前の列とみなさない
+        tall_span: 0.78 # 上の点の高さの幅が 0.78m 以上の塊は小さくても数える (脚 2 本に分かれて見える人. コーンは 0.7m)
       /yield_guard:
         follow_enabled: false
   narrow: # 市役所横の柱向けのパラメータ
@@ -58,6 +60,8 @@ profiles:
         FollowPath.vx_min: 0.0
       /queue_guard:
         enabled: true
+        min_object_size: 0.48 # 歩道のコーン列 (costmap で約 0.45m) を前の列とみなさない
+        tall_span: 0.78 # 上の点の高さの幅が 0.78m 以上の塊は小さくても数える (脚 2 本に分かれて見える人. コーンは 0.7m)
       /yield_guard:
         follow_enabled: false
   road_edge_keep:
@@ -99,6 +103,8 @@ profiles:
         FollowPath.vx_min: 0.0 # 追従待機中に後退しない
       /queue_guard:
         enabled: true
+        min_object_size: 0.48 # 歩道のコーン列 (costmap で約 0.45m) を前の列とみなさない
+        tall_span: 0.78 # 上の点の高さの幅が 0.78m 以上の塊は小さくても数える (脚 2 本に分かれて見える人. コーンは 0.7m)
       /yield_guard:
         follow_enabled: false
   signal_queue: # 信号の停止点そのものへ向かう最後の区間に自動で重ねる: waypoint の線上の待機列の後ろで止まる (経路は物体を避けたまま)
@@ -106,7 +112,8 @@ profiles:
       /queue_guard:
         enabled: true
         use_route: true
-        min_object_size: 0.42 # コーン (直径 0.36m) を待機列のロボットとみなして止まらない
-        tall_height: 0.85 # 0.85m 以上の点が上にある塊は小さくても数える: 実機で脚 2 本に分かれて見える人を見落とさない (コーンは 0.7m)
+        half_width: 0.5 # 列は waypoint の線上に並ぶ. 歩道のコーン列 (経路の横 0.7m 以上) を拾わない
+        min_object_size: 0.48 # コーン (直径 0.36m, costmap で約 0.45m) を待機列のロボットとみなして止まらない
+        tall_span: 0.78 # 上の点の高さの幅が 0.78m 以上の塊は小さくても数える: 脚 2 本に分かれて見える人を見落とさない. 坂でも効くよう足元からの高さでなく幅で見る (コーンは 0.7m, 0.2m 上り坂の人は 0.8m)
       /yield_guard:
         follow_enabled: false
