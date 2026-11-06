@@ -391,6 +391,25 @@ Visualization Manager:
     Show Visual Aids: true
     Value: true
   - Class: rviz_default_plugins/MarkerArray
+    Enabled: true
+    Name: No Refuge Zones
+    Namespaces: {}
+    Topic:
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /no_refuge_zone_editor/zones
+    Value: true
+  - Class: rviz_default_plugins/InteractiveMarkers
+    Enabled: true
+    Interactive Markers Namespace: /no_refuge_zone_editor
+    Name: No Refuge Zone Editor
+    Show Axes: false
+    Show Descriptions: false
+    Show Visual Aids: false
+    Value: true
+  - Class: rviz_default_plugins/MarkerArray
     Enabled: false
     Name: Waypoints
     Namespaces: {}
