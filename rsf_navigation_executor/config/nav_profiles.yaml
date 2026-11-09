@@ -24,6 +24,32 @@ profiles:
         tall_span: 0.78 # 上の点の高さの幅が 0.78m 以上の塊は小さくても数える (脚 2 本に分かれて見える人. コーンは 0.7m)
       /yield_guard:
         follow_enabled: false
+  following_center: # WP10-17: following に加え, global の膨張を広く緩やかにして道の真ん中に経路を引く
+    parameters:
+      /global_costmap/global_costmap:
+        inflation_layer.inflation_radius: 3.0 # 既定 1.0. 道の端から 3m まで勾配を付ける
+        inflation_layer.cost_scaling_factor: 1.0 # 既定 3.0. 小さいほど端から離れてもコストが残り, 中央が最も低くなる
+        obstacle_layer.enabled: false
+        pedestrian_layers.enabled: false
+        pedestrian_layers.obstacle_layer.enabled: false
+      /local_costmap/local_costmap:
+        inflation_layer.inflation_radius: 0.5 # 既定 1.0. 傾斜を誤って障害物とみなしたセルの周りに広がるコストを狭める
+        inflation_layer.cost_scaling_factor: 6.0 # 既定 3.0. narrow と同じ. 縁から離れるとすぐコストが落ちる
+      /controller_server:
+        progress_checker.movement_time_allowance: 180.0
+        failure_tolerance: 5.0
+        FollowPath.vx_min: 0.0 # 追従待機中に後退しない
+        FollowPath.PathAlignCritic.cost_weight: 20.0
+        FollowPath.PathAlignCritic.max_path_occupancy_ratio: 1.0
+        FollowPath.CostCritic.cost_weight: 5.0 # 既定 10. 傾斜の誤検出の膨張から横へ逃げる力を弱める (LETHAL の回避は collision_cost で残る)
+        FollowPath.PathFollowCritic.cost_weight: 25.0 # 既定 15. 傾斜で経路から外れても先の経路へ引き戻す
+        FollowPath.PathAngleCritic.cost_weight: 4.0 # 既定 2. 経路と違う向きに機首を振るのを抑える
+      /queue_guard:
+        enabled: true
+        min_object_size: 0.48 # 歩道のコーン列 (costmap で約 0.45m) を前の列とみなさない
+        tall_span: 0.78 # 上の点の高さの幅が 0.78m 以上の塊は小さくても数える (脚 2 本に分かれて見える人. コーンは 0.7m)
+      /yield_guard:
+        follow_enabled: false
   narrow: # 市役所横の柱向けのパラメータ
     parameters:
       /local_costmap/local_costmap:
