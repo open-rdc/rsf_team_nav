@@ -386,14 +386,26 @@ collision_monitor:
     cmd_vel_out_topic: cmd_vel
     source_timeout: 1.0
     polygons: [FootprintApproach]
-    FootprintApproach:
-      type: polygon
+    FootprintApproach: # 後退時は車体の後ろ半分だけを見る: 前の角に物体を抱え込んでも下がって抜け出せる
+      type: velocity_polygon
       action_type: approach
-      footprint_topic: /local_costmap/published_footprint
       time_before_collision: 1.2
       simulation_time_step: 0.1
       min_points: 6
       enabled: True
+      velocity_polygons: [backward, forward]
+      backward:
+        points: "[[-0.16, -0.26], [0.145, -0.26], [0.145, 0.26], [-0.16, 0.26]]"
+        linear_min: -1.0
+        linear_max: -0.01
+        theta_min: -3.2
+        theta_max: 3.2
+      forward: # padding 無しの実寸 (narrow プロファイルの padding 0 と同じ)
+        points: "[[-0.16, -0.26], [0.45, -0.26], [0.45, 0.26], [-0.16, 0.26]]"
+        linear_min: -0.01
+        linear_max: 1.5
+        theta_min: -3.2
+        theta_max: 3.2
     observation_sources: [scan, pedestrians, robot_team, static_obstacles]
     scan:
       type: scan
