@@ -73,6 +73,7 @@ controller_server:
       motion_model: "DiffDrive"
       visualize: false
       regenerate_noises: true
+      open_loop: true
       TrajectoryVisualizer:
         trajectory_step: 5
         time_step: 3
