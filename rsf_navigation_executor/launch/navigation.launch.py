@@ -14,6 +14,19 @@ from launch_ros.descriptions import ComposableNode, ParameterFile
 from nav2_common.launch import RewrittenYaml
 
 
+def gnss_settings(georef):
+    # georef が無い world は GNSS を使わず, initial_pose か /initialpose から点群照合だけで推定する
+    if not georef or not os.path.exists(georef):
+        return {'gnss_initialize': False}, '/rsf/nav_sat_fix_unused'
+    with open(georef) as f:
+        origin = yaml.safe_load(f)['map_origin']
+    return {
+        'gnss_origin_lat': float(origin['latitude']),
+        'gnss_origin_lon': float(origin['longitude']),
+        'gnss_offset': [0.0, 0.0, -float(origin['altitude'])],
+    }, '/rsf/nav_sat_fix'
+
+
 def generate_launch_description():
     navigation_executor_dir = get_package_share_directory('rsf_navigation_executor')
 
@@ -85,15 +98,8 @@ def generate_launch_description():
             'odom_frame': 'rsf_odom',
             'publish_tf': localization.perform(context) == '3d',
         }
-        georef = LaunchConfiguration('georef_file').perform(context)
-        if georef and os.path.exists(georef):
-            with open(georef) as f:
-                origin = yaml.safe_load(f)['map_origin']
-            params.update({
-                'gnss_origin_lat': float(origin['latitude']),
-                'gnss_origin_lon': float(origin['longitude']),
-                'gnss_offset': [0.0, 0.0, -float(origin['altitude'])],
-            })
+        gnss_params, gnss_topic = gnss_settings(LaunchConfiguration('georef_file').perform(context))
+        params.update(gnss_params)
         return [Node(
             package='rsf_3d_localization',
             executable='rsf_3d_localization_node',
@@ -105,7 +111,7 @@ def generate_launch_description():
             remappings=[
                 ('~/input/pointcloud', '/rsf/hokuyo_cloud2'),
                 ('~/input/imu', '/rsf/imu'),
-                ('~/input/gnss', '/rsf/nav_sat_fix'),
+                ('~/input/gnss', gnss_topic),
                 ('~/input/wheel_odom', '/icart/odom'),
                 ('~/input/initialpose', '/initialpose'),
                 ('~/output/pose_with_covariance', '/rsf_3d_localization/pose_with_covariance'),

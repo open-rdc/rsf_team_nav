@@ -14,7 +14,7 @@ def generate_launch_description():
     world_arg = DeclareLaunchArgument(
         'world',
         default_value='tsukuba',
-        choices=['tsudanuma2-3', 'tsukuba'],
+        choices=['tsudanuma2-3', 'tsukuba', 'tsudanuma'],
     )
     world = LaunchConfiguration('world')
     map_arg = DeclareLaunchArgument(
